@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a2d52">
+<title>Predictable Dividend Growth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf8f3;
+    --surface: #ffffff;
+    --surface-muted: #f3efe6;
+    --ink: #141b2d;
+    --ink-soft: #3d4a64;
+    --muted: #767a82;
+    --rule: #dcd5c5;
+    --rule-soft: #ece7d9;
+    --navy: #1a2d52;
+    --navy-deep: #0f1d3a;
+    --gold: #9e7c2e;
+    --gold-soft: #c8a45c;
+    --gain: #0d6a3f;
+    --loss: #a82817;
+    --highlight: #fff6d9;
+    --shadow: 0 1px 2px rgba(20,27,45,.04), 0 4px 16px rgba(20,27,45,.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Source Sans 3', -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    padding: 24px 20px 80px;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+  h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; letter-spacing: -0.01em; }
+  .num, td.num, th.num { font-family: 'JetBrains Mono', 'Consolas', monospace; font-variant-numeric: tabular-nums; }
+
+  /* === Masthead === */
+  .masthead {
+    border-top: 4px solid var(--navy);
+    border-bottom: 1px solid var(--rule);
+    padding: 28px 0 20px;
+    margin-bottom: 32px;
+    text-align: center;
+    position: relative;
+  }
+  .masthead .kicker {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .masthead h1 {
+    font-size: clamp(32px, 6vw, 54px);
+    line-height: 1;
+    font-weight: 700;
+    color: var(--navy-deep);
+    font-style: italic;
+  }
+  .masthead .subtitle {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--muted);
+    font-size: 15px;
+    margin-top: 8px;
+  }
+  .masthead .date-line {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 14px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .masthead .date-line span.sep { color: var(--rule); }
+
+  /* === Cards === */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .card h2 {
+    font-size: 22px;
+    color: var(--navy-deep);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .card h2 .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--gold);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+  }
+  .card .card-desc {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  /* === Forms === */
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  input[type="text"], input[type="password"], textarea, select {
+    width: 100%;
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(26,45,82,.08);
+  }
+  textarea {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    resize: vertical;
+    min-height: 200px;
+    line-height: 1.6;
+  }
+  select { cursor: pointer; }
+  .field { margin-bottom: 16px; }
+  .field-row { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+  .field-row .field { flex: 1; min-width: 200px; margin-bottom: 0; }
+  .hint {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.45;
+  }
+  .hint a { color: var(--navy); text-decoration: underline; text-underline-offset: 2px; }
+
+  /* === Buttons === */
+  button {
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 12px 22px;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+    color: var(--ink);
+    border-radius: 2px;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  button:hover:not(:disabled) {
+    border-color: var(--ink-soft);
+    background: var(--surface-muted);
+  }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  button.primary {
+    background: var(--navy);
+    color: white;
+    border-color: var(--navy);
+    padding: 14px 32px;
+    font-size: 16px;
+  }
+  button.primary:hover:not(:disabled) {
+    background: var(--navy-deep);
+    border-color: var(--navy-deep);
+  }
+  button.gold {
+    background: var(--gold);
+    color: white;
+    border-color: var(--gold);
+  }
+  button.gold:hover:not(:disabled) {
+    background: #8a6a22;
+    border-color: #8a6a22;
+  }
+  button.danger { color: var(--loss); }
+  button.danger:hover:not(:disabled) { background: #fdecea; border-color: var(--loss); }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 16px; }
+
+  /* === Status === */
+  #status {
+    margin: 16px 0;
+    padding: 14px 18px;
+    border-left: 3px solid var(--gold);
+    background: var(--highlight);
+    color: var(--ink-soft);
+    font-size: 14px;
+    display: none;
+  }
+  #status.error { border-left-color: var(--loss); background: #fdecea; color: var(--loss); }
+  #status.success { border-left-color: var(--gain); background: #e8f5ee; color: var(--gain); }
+  .progress-bar {
+    height: 4px;
+    background: var(--rule-soft);
+    margin-top: 10px;
+    overflow: hidden;
+    border-radius: 2px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--navy);
+    transition: width .3s;
+    width: 0;
+  }
+
+  /* === Tabs === */
+  .tab-bar {
+    border-bottom: 2px solid var(--navy);
+    display: flex;
+    gap: 0;
+    margin-bottom: 20px;
+    overflow-x: auto;
+  }
+  .tab-bar button {
+    border: none;
+    background: transparent;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .tab-bar button:hover { color: var(--ink); background: transparent; }
+  .tab-bar button.active {
+    color: var(--navy);
+    border-bottom-color: var(--gold);
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* === Tables === */
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: var(--surface);
+    margin-bottom: 16px;
+    -webkit-overflow-scrolling: touch;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead { background: var(--navy); color: white; }
+  thead th {
+    padding: 10px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    vertical-align: bottom;
+    border-right: 1px solid rgba(255,255,255,.08);
+  }
+  thead th.group {
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,.2);
+    font-size: 10px;
+    color: var(--gold-soft);
+    font-style: italic;
+    font-weight: 500;
+  }
+  thead th.num { text-align: right; }
+  tbody td {
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--rule-soft);
+    border-right: 1px solid var(--rule-soft);
+    vertical-align: middle;
+  }
+  tbody td.num { text-align: right; font-size: 13px; }
+  tbody td.ticker { font-weight: 700; color: var(--navy); letter-spacing: 0.03em; }
+  tbody td.company { font-size: 12px; color: var(--ink-soft); min-width: 120px; }
+  tbody td.sector { font-size: 11px; color: var(--muted); white-space: nowrap; }
+  tbody tr:hover { background: var(--surface-muted); }
+  tbody tr.total {
+    background: var(--highlight);
+    font-weight: 700;
+    border-top: 2px solid var(--navy);
+  }
+  tbody tr.total td { border-bottom: 2px solid var(--navy); }
+  tbody tr.err td { color: var(--loss); font-style: italic; }
+  td.gain { color: var(--gain); font-weight: 500; }
+  td.loss { color: var(--loss); font-weight: 500; }
+  td.mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* === View controls === */
+  .view-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .view-controls label { margin: 0; font-size: 12px; }
+  .checkbox-row { display: flex; gap: 8px; align-items: center; font-size: 13px; }
+  .checkbox-row input { width: auto; }
+
+  /* === Footer actions === */
+  .footer-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  /* === Summary stats === */
+  .portfolio-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0;
+    margin-bottom: 24px;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .stat {
+    padding: 16px 18px;
+    border-right: 1px solid var(--rule);
+    text-align: center;
+  }
+  .stat:last-child { border-right: none; }
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .stat-value {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--navy-deep);
+    line-height: 1.1;
+  }
+  .stat-value .unit {
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 400;
+    margin-left: 2px;
+  }
+
+  /* === Modal === */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,29,58,.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--surface);
+    padding: 32px;
+    border-radius: 2px;
+    max-width: 480px;
+    width: 100%;
+    border-top: 4px solid var(--gold);
+  }
+  .modal h3 {
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: var(--navy-deep);
+  }
+  .modal p { color: var(--ink-soft); margin-bottom: 16px; font-size: 14px; }
+  .modal .btn-row { justify-content: flex-end; margin-top: 20px; }
+
+  /* === Print === */
+  @media print {
+    @page { size: letter landscape; margin: 0.4in; }
+    body { padding: 0; max-width: none; background: white; }
+    .no-print, button, .tab-bar, select, input, textarea, .hint,
+    #setupCard, #portfolioCard, #status, .footer-actions, .view-controls { display: none !important; }
+    .card { border: none; box-shadow: none; padding: 0; margin-bottom: 12px; page-break-inside: avoid; }
+    .masthead { margin-bottom: 12px; padding: 8px 0; border-top: 3px solid var(--navy); }
+    .masthead h1 { font-size: 32px; }
+    .masthead .date-line { font-size: 10px; margin-top: 6px; }
+    .tab-panel { display: block !important; page-break-after: always; }
+    .tab-panel:last-child { page-break-after: auto; }
+    .tab-panel.print-hide { display: none !important; }
+    .table-wrap { border: 1px solid #888; overflow: visible; }
+    table { font-size: 9.5px; }
+    thead th { padding: 5px 5px; font-size: 9px; background: #1a2d52 !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    tbody td { padding: 4px 5px; font-size: 9.5px; }
+    .portfolio-stats { page-break-inside: avoid; }
+    .stat { padding: 8px 10px; }
+    .stat-value { font-size: 16px; }
+    tbody tr.total { background: #fff6d9 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    tr { page-break-inside: avoid; }
+    .section-num { display: none; }
+  }
+
+  /* === Mobile === */
+  @media (max-width: 640px) {
+    body { padding: 12px 12px 60px; }
+    .card { padding: 18px; }
+    .stat-value { font-size: 20px; }
+    .masthead { padding: 18px 0 14px; margin-bottom: 20px; }
+    button.primary { padding: 14px 24px; width: 100%; }
+    .btn-row button { flex: 1; min-width: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <h1>Predictable Dividend Growth</h1>
+  <div class="date-line">
+    <span id="displayDate">—</span>
+    <span class="sep">·</span>
+    <span id="displayPortfolio">No portfolio selected</span>
+    <span class="sep">·</span>
+    <span id="displayHoldings">0 holdings</span>
+  </div>
+</header>
+
+<!-- === SETUP === -->
+<section id="setupCard" class="card no-print">
+  <h2><span class="section-num">§ 01</span> Setup <span id="workerBadge" style="font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); font-family:'Source Sans 3'; margin-left:8px; font-weight:600"></span></h2>
+  <p class="card-desc">One-time: connect your Cloudflare Worker. Data stays between your browser and your own proxy.</p>
+  <div class="field-row">
+    <div class="field" style="flex:3">
+      <label for="workerUrl">Cloudflare Worker URL</label>
+      <input type="url" id="workerUrl" placeholder="https://pdg-proxy.your-name.workers.dev" autocomplete="off">
+      <div class="hint">New to this? See setup steps in the <code style="background:var(--surface-muted); padding:2px 6px; border-radius:2px; font-family:'JetBrains Mono',monospace; font-size:12px">worker.js</code> file header — 5 minutes, free Cloudflare account, no credit card.</div>
+    </div>
+    <div class="field" style="min-width:auto">
+      <button onclick="saveWorkerUrl()" class="gold">Save</button>
+    </div>
+    <div class="field" style="min-width:auto">
+      <button onclick="testWorker()">Test</button>
+    </div>
+  </div>
+</section>
+
+<!-- === PORTFOLIO === -->
+<section id="portfolioCard" class="card no-print">
+  <h2><span class="section-num">§ 02</span> Portfolio</h2>
+  <p class="card-desc">Choose a saved portfolio or create a new one. All data stays on this device.</p>
+
+  <div class="field-row">
+    <div class="field" style="flex:2">
+      <label for="portfolioSelect">Active Portfolio</label>
+      <select id="portfolioSelect" onchange="switchPortfolio()"></select>
+    </div>
+    <div class="field" style="min-width:auto">
+      <button onclick="newPortfolio()">+ New</button>
+    </div>
+    <div class="field" style="min-width:auto">
+      <button onclick="renamePortfolio()">Rename</button>
+    </div>
+    <div class="field" style="min-width:auto">
+      <button onclick="deletePortfolio()" class="danger">Delete</button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="tickersInput">Holdings — one ticker per line, equal-weighted</label>
+    <textarea id="tickersInput" placeholder="ABBV&#10;AMGN&#10;BBY&#10;BMY&#10;CI&#10;EOG&#10;LMT&#10;LOW&#10;...&#10;&#10;Each holding gets 1/N of the portfolio."></textarea>
+    <div class="hint">One ticker per line. The portfolio is equal-weighted — each holding gets <code style="background:var(--surface-muted); padding:2px 6px; border-radius:2px; font-family:'JetBrains Mono',monospace; font-size:12px">1 / N</code> weight.</div>
+  </div>
+
+  <div class="btn-row">
+    <button onclick="savePortfolio()">Save Changes</button>
+    <button id="updateBtn" onclick="updatePrices()" class="primary">↻ Update Prices &amp; Data</button>
+    <span id="lastUpdate" class="hint" style="margin:0 0 0 auto; font-size:12px"></span>
+  </div>
+</section>
+
+<div id="status"></div>
+
+<!-- === RESULTS === -->
+<section id="resultsCard" class="card" style="display:none">
+  <div class="tab-bar no-print">
+    <button class="active" onclick="showTab('summary', this)">Final Portfolio</button>
+    <button onclick="showTab('history', this)">Historical Dividends</button>
+  </div>
+
+  <!-- Final Portfolio tab -->
+  <div id="tab-summary" class="tab-panel active">
+    <div class="portfolio-stats" id="portfolioStats"></div>
+
+    <div class="view-controls no-print">
+      <label style="margin:0">View:</label>
+      <label class="checkbox-row">
+        <input type="checkbox" id="viewCompact" onchange="renderSummary()"> Compact (print-friendly)
+      </label>
+    </div>
+
+    <div class="table-wrap">
+      <table id="summaryTable"></table>
+    </div>
+  </div>
+
+  <!-- Historical Dividends tab -->
+  <div id="tab-history" class="tab-panel">
+    <div class="view-controls no-print">
+      <label style="margin:0">Years shown:</label>
+      <select id="yearsShown" onchange="renderHistory()" style="width:auto; padding:6px 12px">
+        <option value="10">Last 10 + projected</option>
+        <option value="15">Last 15 + projected</option>
+        <option value="25" selected>All (2002 → projected)</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table id="historyTable"></table>
+    </div>
+    <div id="portfolioIncomeTable" style="margin-top:16px"></div>
+  </div>
+
+  <div class="footer-actions">
+    <button onclick="window.print()" class="primary">🖨 Print / Save as PDF</button>
+  </div>
+</section>
+
+<!-- === Modal === -->
+<div id="modal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h3 id="modalTitle">Heading</h3>
+    <p id="modalBody">Body</p>
+    <div class="field">
+      <input type="text" id="modalInput">
+    </div>
+    <div class="btn-row">
+      <button onclick="closeModal()">Cancel</button>
+      <button onclick="confirmModal()" class="primary">OK</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   STATE MANAGEMENT
+   ============================================================ */
+const STORAGE_KEY = 'pdg_v1';
+// Hardcoded default Worker URL. Anyone opening this file goes straight to entering tickers.
+// Users can still override this via Section 01 if they want to point at a different worker.
+const DEFAULT_WORKER_URL = 'https://pdg-proxy.rpaschen.workers.dev';
+
+let state = {
+  workerUrl: DEFAULT_WORKER_URL,
+  portfolios: {},           // { name: { tickers: [{symbol}] } }
+  activePortfolio: null,
+  lastData: null,
+  lastUpdated: null,
+};
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      state = { ...state, ...parsed };
+    }
+  } catch (e) { console.error('Load error', e); }
+  if (Object.keys(state.portfolios).length === 0) {
+    state.portfolios = { 'Default': { tickers: [] } };
+    state.activePortfolio = 'Default';
+  }
+  if (!state.activePortfolio || !state.portfolios[state.activePortfolio]) {
+    state.activePortfolio = Object.keys(state.portfolios)[0];
+  }
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    workerUrl: state.workerUrl,
+    portfolios: state.portfolios,
+    activePortfolio: state.activePortfolio,
+    lastUpdated: state.lastUpdated,
+  }));
+}
+
+/* ============================================================
+   UI RENDERING — setup
+   ============================================================ */
+function renderPortfolioSelect() {
+  const sel = document.getElementById('portfolioSelect');
+  sel.innerHTML = '';
+  for (const name of Object.keys(state.portfolios)) {
+    const opt = document.createElement('option');
+    opt.value = name; opt.textContent = name;
+    if (name === state.activePortfolio) opt.selected = true;
+    sel.appendChild(opt);
+  }
+}
+
+function renderTickerBox() {
+  const p = state.portfolios[state.activePortfolio];
+  const box = document.getElementById('tickersInput');
+  if (!p) { box.value = ''; return; }
+  box.value = p.tickers.map(t => t.symbol).join('\n');
+  updateMasthead();
+}
+
+function updateMasthead() {
+  const p = state.portfolios[state.activePortfolio];
+  document.getElementById('displayPortfolio').textContent = state.activePortfolio || '—';
+  document.getElementById('displayHoldings').textContent = `${p ? p.tickers.length : 0} holdings`;
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  document.getElementById('displayDate').textContent = dateStr;
+  if (state.lastUpdated) {
+    const ud = new Date(state.lastUpdated);
+    document.getElementById('lastUpdate').textContent = `Last updated: ${ud.toLocaleString()}`;
+  }
+}
+
+/* ============================================================
+   PORTFOLIO MGMT
+   ============================================================ */
+function parseTickerBox() {
+  const text = document.getElementById('tickersInput').value;
+  return text.split(/\r?\n/).map(line => {
+    const sym = line.trim().split(/\s+/)[0];
+    if (!sym) return null;
+    return { symbol: sym.toUpperCase() };
+  }).filter(Boolean);
+}
+
+function savePortfolio() {
+  const tickers = parseTickerBox();
+  state.portfolios[state.activePortfolio] = { tickers };
+  saveState();
+  flashStatus(`Portfolio "${state.activePortfolio}" saved — ${tickers.length} holdings.`, 'success');
+  updateMasthead();
+}
+
+function switchPortfolio() {
+  state.activePortfolio = document.getElementById('portfolioSelect').value;
+  saveState();
+  renderTickerBox();
+  document.getElementById('resultsCard').style.display = 'none';
+  state.lastData = null;
+}
+
+function newPortfolio() {
+  openModal('New Portfolio', 'Name for the new portfolio (e.g. a client\'s first name):', '', (name) => {
+    name = (name || '').trim();
+    if (!name) return;
+    if (state.portfolios[name]) { alert('A portfolio with that name already exists.'); return; }
+    state.portfolios[name] = { tickers: [] };
+    state.activePortfolio = name;
+    saveState();
+    renderPortfolioSelect();
+    renderTickerBox();
+    document.getElementById('tickersInput').focus();
+  });
+}
+
+function renamePortfolio() {
+  openModal('Rename Portfolio', 'New name:', state.activePortfolio, (newName) => {
+    newName = (newName || '').trim();
+    if (!newName || newName === state.activePortfolio) return;
+    if (state.portfolios[newName]) { alert('That name is already taken.'); return; }
+    state.portfolios[newName] = state.portfolios[state.activePortfolio];
+    delete state.portfolios[state.activePortfolio];
+    state.activePortfolio = newName;
+    saveState();
+    renderPortfolioSelect();
+    updateMasthead();
+  });
+}
+
+function saveWorkerUrl() {
+  const raw = document.getElementById('workerUrl').value.trim();
+  const cleaned = raw.replace(/\/$/, '');
+  if (cleaned && !/^https?:\/\//i.test(cleaned)) {
+    flashStatus('Worker URL should start with https://', 'error');
+    return;
+  }
+  state.workerUrl = cleaned;
+  saveState();
+  updateWorkerStatus();
+  flashStatus('Worker URL saved to this device.', 'success');
+}
+
+async function testWorker() {
+  const url = document.getElementById('workerUrl').value.trim().replace(/\/$/, '');
+  if (!url) { flashStatus('Paste a Worker URL first.', 'error'); return; }
+  flashStatus('Testing worker…', '');
+  try {
+    const r = await fetch(`${url}/test`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    if (data.ok) {
+      flashStatus('✓ Worker is live and responding.', 'success');
+      // Also save it if it works
+      state.workerUrl = url;
+      saveState();
+      updateWorkerStatus();
+    } else {
+      flashStatus('Worker responded but returned an unexpected payload.', 'error');
+    }
+  } catch (e) {
+    flashStatus(`Worker test failed: ${e.message}. Check the URL and that the worker is deployed.`, 'error');
+  }
+}
+
+function updateWorkerStatus() {
+  const badge = document.getElementById('workerBadge');
+  if (!badge) return;
+  if (state.workerUrl) {
+    badge.innerHTML = '<span style="color:var(--gain)">● connected</span>';
+  } else {
+    badge.innerHTML = '<span style="color:var(--loss)">● not configured</span>';
+  }
+}
+
+function deletePortfolio() {
+  if (Object.keys(state.portfolios).length <= 1) {
+    alert('You must keep at least one portfolio. Create another first.');
+    return;
+  }
+  if (!confirm(`Delete "${state.activePortfolio}"? This cannot be undone.`)) return;
+  delete state.portfolios[state.activePortfolio];
+  state.activePortfolio = Object.keys(state.portfolios)[0];
+  saveState();
+  renderPortfolioSelect();
+  renderTickerBox();
+  document.getElementById('resultsCard').style.display = 'none';
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+let modalCallback = null;
+function openModal(title, body, value, cb) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').textContent = body;
+  const input = document.getElementById('modalInput');
+  input.value = value || '';
+  modalCallback = cb;
+  document.getElementById('modal').classList.add('show');
+  setTimeout(() => input.focus(), 50);
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+  modalCallback = null;
+}
+function confirmModal() {
+  const v = document.getElementById('modalInput').value;
+  const cb = modalCallback;
+  closeModal();
+  if (cb) cb(v);
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('modal').classList.contains('show')) confirmModal();
+  if (e.key === 'Escape') closeModal();
+});
+
+/* ============================================================
+   STATUS
+   ============================================================ */
+function flashStatus(msg, type = '', progress = null) {
+  const el = document.getElementById('status');
+  el.className = type;
+  el.style.display = 'block';
+  let html = msg;
+  if (progress !== null) {
+    html += `<div class="progress-bar"><div class="progress-bar-fill" style="width:${progress}%"></div></div>`;
+  }
+  el.innerHTML = html;
+  if (type === 'success') setTimeout(() => { el.style.display = 'none'; }, 3000);
+}
+
+/* ============================================================
+   DATA FETCHING — Financial Modeling Prep
+   ============================================================ */
+async function workerFetch(symbol) {
+  if (!state.workerUrl) throw new Error('Worker URL not configured');
+  const base = state.workerUrl.replace(/\/$/, '');
+  const url = `${base}/?symbol=${encodeURIComponent(symbol)}`;
+  const r = await fetch(url);
+  if (!r.ok) {
+    if (r.status === 0) throw new Error('Worker unreachable — check the URL');
+    throw new Error(`Worker returned HTTP ${r.status}`);
+  }
+  const data = await r.json();
+  if (data.error) throw new Error(data.error);
+  return data;
+}
+
+async function fetchTickerData(symbol) {
+  const data = await workerFetch(symbol);
+  return {
+    symbol,
+    quoteSummary: data.quote?.quoteSummary?.result?.[0] || null,
+    quoteError: data.quote?.quoteSummary?.error || null,
+    chart: data.dividends?.chart?.result?.[0] || null,
+    chartError: data.dividends?.chart?.error || null,
+  };
+}
+
+/* ============================================================
+   COMPUTATIONS
+   ============================================================ */
+// Sum dividends by calendar year.
+// Yahoo returns chart.events.dividends as a map of timestamp -> {amount, date}.
+// FMP returned an array — we accept either shape for resilience.
+function dividendsByYear(divs) {
+  const map = {};
+  if (!divs) return map;
+
+  // Yahoo shape: object keyed by unix timestamp
+  if (typeof divs === 'object' && !Array.isArray(divs)) {
+    for (const key of Object.keys(divs)) {
+      const ev = divs[key];
+      if (!ev) continue;
+      const amt = ev.amount ?? 0;
+      const ts = ev.date ?? parseInt(key, 10);
+      if (!amt || !ts) continue;
+      const yr = new Date(ts * 1000).getUTCFullYear().toString();
+      map[yr] = (map[yr] || 0) + amt;
+    }
+    return map;
+  }
+
+  // Array shape (e.g. FMP or normalized)
+  if (Array.isArray(divs)) {
+    for (const d of divs) {
+      const yr = (d.date || d.paymentDate || '').slice(0, 4);
+      if (!yr) continue;
+      const amt = d.adjDividend ?? d.dividend ?? d.amount ?? 0;
+      map[yr] = (map[yr] || 0) + amt;
+    }
+  }
+  return map;
+}
+
+// Round to 4 digits to avoid FP artifacts
+const r4 = x => Math.round(x * 10000) / 10000;
+
+// Compound annual growth rate over N periods (RRI equivalent)
+function rri(n, start, end) {
+  if (!start || !end || start <= 0 || end <= 0) return null;
+  return Math.pow(end / start, 1 / n) - 1;
+}
+
+function computeDGRs(divsByYear) {
+  const currentYear = new Date().getFullYear();
+  // Always use the last FULLY COMPLETED calendar year as the endpoint.
+  // Never use the current (partial) year — it would understate growth.
+  const lastFullYear = currentYear - 1;
+
+  const v = y => divsByYear[String(y)] || 0;
+
+  // If the last full year has no dividends, this ticker didn't pay last year — no DGR possible.
+  if (!v(lastFullYear)) {
+    return { dgr1: null, dgr3: null, dgr5: null, lastYear: null, ttm: 0 };
+  }
+
+  return {
+    dgr1: v(lastFullYear - 1) ? v(lastFullYear) / v(lastFullYear - 1) - 1 : null,
+    dgr3: rri(3, v(lastFullYear - 3), v(lastFullYear)),
+    dgr5: rri(5, v(lastFullYear - 5), v(lastFullYear)),
+    lastYear: lastFullYear,
+    ttm: v(lastFullYear),
+  };
+}
+
+// Process one ticker's Yahoo data into a flat row
+function processRow(raw) {
+  const d = { symbol: raw.symbol, errors: [] };
+  const qs = raw.quoteSummary || {};
+
+  // Yahoo returns values wrapped like {raw: 0.0234, fmt: "2.34%"} — extract .raw
+  const val = (obj) => (obj && typeof obj === 'object' && 'raw' in obj) ? obj.raw : (obj ?? null);
+
+  if (raw.quoteError?.description) d.errors.push('quote: ' + raw.quoteError.description);
+  if (raw.chartError?.description) d.errors.push('chart: ' + raw.chartError.description);
+
+  const sd  = qs.summaryDetail          || {};
+  const dks = qs.defaultKeyStatistics   || {};
+  const fd  = qs.financialData          || {};
+  const pr  = qs.price                  || {};
+  const ap  = qs.assetProfile           || {};
+  const qt  = qs.quoteType              || {};
+  const inc = qs.incomeStatementHistory?.incomeStatementHistory || [];
+  const cfh = qs.cashflowStatementHistory?.cashflowStatements   || [];
+
+  d.companyName = qt.longName || pr.longName || pr.shortName || raw.symbol;
+  d.sector      = ap.sector || '';
+  d.price       = val(pr.regularMarketPrice);
+  d.pe          = val(sd.trailingPE);
+  d.dividendYield = val(sd.dividendYield);
+  d.peg         = val(dks.pegRatio);
+  d.payoutRatio = val(sd.payoutRatio);
+  d.beta        = val(sd.beta) ?? val(dks.beta);
+  d.roe         = val(fd.returnOnEquity);
+  d.sharesOutstanding = val(dks.sharesOutstanding);
+  d.netIncome   = val(inc[0]?.netIncome);
+  d.eps         = val(dks.trailingEps);
+  d.dps         = val(sd.trailingAnnualDividendRate) ?? val(sd.dividendRate);
+  d.dividend    = d.dps;
+
+  // Cash-flow per share — from most recent annual cashflow statement
+  const ocf = val(cfh[0]?.totalCashFromOperatingActivities);
+  d.cfps = (ocf && d.sharesOutstanding) ? ocf / d.sharesOutstanding : null;
+
+  // Quarterly revenue growth YoY — Yahoo gives this directly
+  d.qtrRevGrowth = val(fd.revenueGrowth);
+
+  // EGR: CAGR of net income over available income-statement history (usually 3–4 years)
+  d.egr5y = computeEGR(inc, val);
+
+  // Historical dividends → by year
+  const divEvents = raw.chart?.events?.dividends || null;
+  d.divByYear = dividendsByYear(divEvents);
+
+  const dgr = computeDGRs(d.divByYear);
+  d.dgr1 = dgr.dgr1; d.dgr3 = dgr.dgr3; d.dgr5 = dgr.dgr5;
+  d.lastDivYear = dgr.lastYear;
+
+  // Derived
+  d.totalDividend = (d.dps ?? 0) * (d.sharesOutstanding ?? 0);
+  d.cfDivRatio = (d.cfps && d.dps) ? d.cfps / d.dps : null;
+
+  return d;
+}
+
+// Compound annual growth rate of net income over the available years of history
+function computeEGR(inc, val) {
+  if (!inc || inc.length < 2) return null;
+  const curr = val(inc[0]?.netIncome);
+  const old  = val(inc[inc.length - 1]?.netIncome);
+  if (!curr || !old || curr <= 0 || old <= 0) return null;
+  const years = inc.length - 1;
+  return Math.pow(curr / old, 1 / years) - 1;
+}
+
+/* ============================================================
+   MAIN UPDATE
+   ============================================================ */
+async function updatePrices() {
+  if (!state.workerUrl) {
+    flashStatus('Please set up your Cloudflare Worker URL first (Section 01 above).', 'error');
+    document.getElementById('workerUrl')?.focus();
+    return;
+  }
+  // Auto-save current edits
+  savePortfolio();
+  const p = state.portfolios[state.activePortfolio];
+  if (!p || p.tickers.length === 0) {
+    flashStatus('Add some tickers first.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('updateBtn');
+  btn.disabled = true;
+  btn.textContent = '↻ Fetching…';
+
+  const total = p.tickers.length;
+  let done = 0;
+  flashStatus(`Fetching ${total} holdings…`, '', 0);
+
+  const rows = [];
+  // Process 3 tickers at a time for a balance of speed vs rate limits
+  const BATCH = 3;
+  for (let i = 0; i < p.tickers.length; i += BATCH) {
+    const batch = p.tickers.slice(i, i + BATCH);
+    const settled = await Promise.all(batch.map(async t => {
+      try {
+        const raw = await fetchTickerData(t.symbol);
+        return processRow(raw);
+      } catch (e) {
+        return { symbol: t.symbol, error: e.message };
+      }
+    }));
+    rows.push(...settled);
+    done += batch.length;
+    flashStatus(`Fetching… ${done} of ${total} complete`, '', Math.round(done / total * 100));
+  }
+
+  // Equal weighting: each holding = 1/N
+  const validCount = rows.filter(r => !r.error).length;
+  const eqWeight = validCount > 0 ? 1 / validCount : 0;
+  for (const r of rows) r.weight = r.error ? 0 : eqWeight;
+
+  state.lastData = { rows, portfolioName: state.activePortfolio, equalWeight: eqWeight };
+  state.lastUpdated = new Date().toISOString();
+  saveState();
+
+  btn.disabled = false;
+  btn.textContent = '↻ Update Prices & Data';
+
+  const errCount = rows.filter(r => r.error).length;
+  if (errCount) {
+    flashStatus(`Done — ${total - errCount} updated, ${errCount} failed. Failed tickers may be delisted or misspelled.`, 'error');
+  } else {
+    flashStatus(`Updated all ${total} holdings successfully.`, 'success');
+  }
+
+  document.getElementById('resultsCard').style.display = 'block';
+  renderSummary();
+  renderHistory();
+  updateMasthead();
+  document.getElementById('resultsCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ============================================================
+   FORMATTING
+   ============================================================ */
+const fmtMoney = n => n == null || isNaN(n) ? '—' : n.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtMoneyInt = n => n == null || isNaN(n) ? '—' : n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+const fmtPct = n => n == null || isNaN(n) ? '—' : (n * 100).toFixed(2) + '%';
+const fmtPct1 = n => n == null || isNaN(n) ? '—' : (n * 100).toFixed(1) + '%';
+const fmtNum = (n, dec = 2) => n == null || isNaN(n) ? '—' : Number(n).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+const fmtInt = n => n == null || isNaN(n) ? '—' : Math.round(n).toLocaleString('en-US');
+const fmtX = n => n == null || isNaN(n) ? '—' : Number(n).toFixed(1) + 'x';
+const gainLoss = n => n == null ? '' : (n > 0 ? 'gain' : (n < 0 ? 'loss' : ''));
+const pctClass = n => n == null ? '' : (n >= 0.05 ? 'gain' : (n < 0 ? 'loss' : ''));
+const fmtMoneyBig = n => {
+  if (n == null || isNaN(n)) return '—';
+  if (Math.abs(n) >= 1e9) return '$' + (n/1e9).toFixed(2) + 'B';
+  if (Math.abs(n) >= 1e6) return '$' + (n/1e6).toFixed(1) + 'M';
+  if (Math.abs(n) >= 1e3) return '$' + (n/1e3).toFixed(0) + 'K';
+  return '$' + Math.round(n);
+};
+
+/* ============================================================
+   RENDER — Summary tab
+   ============================================================ */
+function renderSummary() {
+  if (!state.lastData) return;
+  const { rows, equalWeight } = state.lastData;
+  const compact = document.getElementById('viewCompact')?.checked;
+
+  // --- Portfolio stats (equal-weighted) ---
+  const valid = rows.filter(r => !r.error);
+  const avg = (fn) => valid.length ? valid.reduce((s, r) => s + (fn(r) || 0), 0) / valid.length : 0;
+  const avgPos = (fn) => {
+    const vals = valid.map(fn).filter(v => v != null && !isNaN(v) && v > 0);
+    return vals.length ? vals.reduce((s,v) => s+v, 0) / vals.length : 0;
+  };
+  const weightedYield = avg(r => r.dividendYield);
+  const weightedPE = avgPos(r => r.pe);
+  const weightedBeta = avg(r => r.beta);
+  const weightedDGR3 = avg(r => r.dgr3);
+  const weightedDGR5 = avg(r => r.dgr5);
+  const weightedPayout = avgPos(r => r.payoutRatio);
+
+  const statsEl = document.getElementById('portfolioStats');
+  statsEl.innerHTML = `
+    <div class="stat"><div class="stat-label">Holdings</div><div class="stat-value">${rows.length}</div></div>
+    <div class="stat"><div class="stat-label">Weight Each</div><div class="stat-value">${(equalWeight*100).toFixed(2)}<span class="unit">%</span></div></div>
+    <div class="stat"><div class="stat-label">Yield (avg)</div><div class="stat-value">${(weightedYield*100).toFixed(2)}<span class="unit">%</span></div></div>
+    <div class="stat"><div class="stat-label">P/E (avg)</div><div class="stat-value">${weightedPE.toFixed(1)}<span class="unit">x</span></div></div>
+    <div class="stat"><div class="stat-label">3-yr DGR</div><div class="stat-value">${(weightedDGR3*100).toFixed(2)}<span class="unit">%</span></div></div>
+    <div class="stat"><div class="stat-label">5-yr DGR</div><div class="stat-value">${(weightedDGR5*100).toFixed(2)}<span class="unit">%</span></div></div>
+    <div class="stat"><div class="stat-label">Beta (avg)</div><div class="stat-value">${weightedBeta.toFixed(2)}</div></div>
+    <div class="stat"><div class="stat-label">Payout (avg)</div><div class="stat-value">${(weightedPayout*100).toFixed(0)}<span class="unit">%</span></div></div>
+  `;
+
+  // --- Column definitions ---
+  const FULL_COLS = [
+    { k: 'symbol', h: 'Ticker', render: r => `<td class="ticker">${r.symbol}</td>` },
+    { k: 'companyName', h: 'Company', render: r => `<td class="company">${r.companyName || ''}</td>` },
+    { k: 'price', h: 'Price', cls: 'num', render: r => `<td class="num mono">${fmtMoney(r.price)}</td>` },
+    { k: 'weight', h: 'Weight', cls: 'num', render: r => `<td class="num mono">${fmtPct1(r.weight)}</td>` },
+    { k: 'pe', h: 'P/E', cls: 'num', render: r => `<td class="num mono">${fmtX(r.pe)}</td>` },
+    { k: 'dividendYield', h: 'Yield', cls: 'num', render: r => `<td class="num mono ${pctClass(r.dividendYield)}">${fmtPct(r.dividendYield)}</td>` },
+    { k: 'peg', h: 'PEG', cls: 'num', render: r => `<td class="num mono">${fmtX(r.peg)}</td>` },
+    { k: 'dgr1', h: 'DGR 1y', cls: 'num', render: r => `<td class="num mono ${gainLoss(r.dgr1)}">${fmtPct(r.dgr1)}</td>` },
+    { k: 'dgr3', h: 'DGR 3y', cls: 'num', render: r => `<td class="num mono ${gainLoss(r.dgr3)}">${fmtPct(r.dgr3)}</td>` },
+    { k: 'dgr5', h: 'DGR 5y', cls: 'num', render: r => `<td class="num mono ${gainLoss(r.dgr5)}">${fmtPct(r.dgr5)}</td>` },
+    { k: 'payoutRatio', h: 'Payout', cls: 'num', render: r => `<td class="num mono">${fmtPct(r.payoutRatio)}</td>` },
+    { k: 'dps', h: 'Divd/Sh', cls: 'num', render: r => `<td class="num mono">${fmtMoney(r.dps)}</td>` },
+    { k: 'sharesOutstanding', h: 'Shrs Out', cls: 'num', render: r => `<td class="num mono">${fmtMoneyBig(r.sharesOutstanding).replace('$','')}</td>` },
+    { k: 'netIncome', h: 'Net Income', cls: 'num', render: r => `<td class="num mono">${fmtMoneyBig(r.netIncome)}</td>` },
+    { k: 'egr5y', h: 'EGR 5y', cls: 'num', render: r => `<td class="num mono ${gainLoss(r.egr5y)}">${fmtPct(r.egr5y)}</td>` },
+    { k: 'beta', h: 'Beta', cls: 'num', render: r => `<td class="num mono">${fmtNum(r.beta)}</td>` },
+    { k: 'roe', h: 'ROE', cls: 'num', render: r => `<td class="num mono ${gainLoss(r.roe)}">${fmtPct(r.roe)}</td>` },
+    { k: 'cfDivRatio', h: 'CF:Div', cls: 'num', render: r => `<td class="num mono">${fmtX(r.cfDivRatio)}</td>` },
+    { k: 'cfps', h: 'CFPS', cls: 'num', render: r => `<td class="num mono">${fmtMoney(r.cfps)}</td>` },
+    { k: 'qtrRevGrowth', h: 'Qtr Rev YoY', cls: 'num', render: r => `<td class="num mono ${gainLoss(r.qtrRevGrowth)}">${fmtPct(r.qtrRevGrowth)}</td>` },
+    { k: 'sector', h: 'GICS Sector', render: r => `<td class="sector">${r.sector || ''}</td>` },
+  ];
+
+  const COMPACT_KEYS = ['symbol','companyName','price','weight','pe','dividendYield','dgr3','dgr5','payoutRatio','beta','sector'];
+  const cols = compact ? FULL_COLS.filter(c => COMPACT_KEYS.includes(c.k)) : FULL_COLS;
+
+  // Build header
+  const hdrRow = cols.map(c => `<th class="${c.cls || ''}">${c.h}</th>`).join('');
+  // Build rows
+  const tbody = rows.map(r => {
+    if (r.error) {
+      return `<tr class="err"><td class="ticker">${r.symbol}</td><td colspan="${cols.length-1}">Error: ${r.error}</td></tr>`;
+    }
+    return `<tr>${cols.map(c => c.render(r)).join('')}</tr>`;
+  }).join('');
+
+  // Totals / averages row
+  const totalWeight = valid.reduce((s, r) => s + r.weight, 0);
+  const avgs = {
+    symbol: 'AVERAGE',
+    companyName: `(equal-weighted, n=${valid.length})`,
+    price: '',
+    weight: fmtPct1(totalWeight),
+    pe: fmtX(weightedPE),
+    dividendYield: fmtPct(weightedYield),
+    peg: fmtX(avgPos(r => r.peg)),
+    dgr1: fmtPct(avg(r => r.dgr1)),
+    dgr3: fmtPct(weightedDGR3),
+    dgr5: fmtPct(weightedDGR5),
+    payoutRatio: fmtPct(weightedPayout),
+    dps: fmtMoney(avg(r => r.dps)),
+    sharesOutstanding: '',
+    netIncome: '',
+    egr5y: fmtPct(avg(r => r.egr5y)),
+    beta: fmtNum(weightedBeta),
+    roe: fmtPct(avgPos(r => r.roe)),
+    cfDivRatio: fmtX(avgPos(r => r.cfDivRatio)),
+    cfps: fmtMoney(avg(r => r.cfps)),
+    qtrRevGrowth: fmtPct(avg(r => r.qtrRevGrowth)),
+    sector: '',
+  };
+  const totalsRow = `<tr class="total">${cols.map(c => {
+    const v = avgs[c.k] ?? '';
+    return `<td class="${c.cls || ''} ${c.cls === 'num' ? 'mono' : ''}">${v}</td>`;
+  }).join('')}</tr>`;
+
+  document.getElementById('summaryTable').innerHTML = `<thead><tr>${hdrRow}</tr></thead><tbody>${tbody}${totalsRow}</tbody>`;
+}
+
+/* ============================================================
+   RENDER — Historical Dividends tab
+   ============================================================ */
+function renderHistory() {
+  if (!state.lastData) return;
+  const { rows } = state.lastData;
+  const yearsShown = parseInt(document.getElementById('yearsShown')?.value || '25');
+
+  const thisYear = new Date().getFullYear();
+  const lastFullYear = thisYear - 1;
+  const projectedYear = thisYear + 1;
+  // Start year
+  const allYears = new Set();
+  for (const r of rows) {
+    if (!r.divByYear) continue;
+    Object.keys(r.divByYear).forEach(y => allYears.add(Number(y)));
+  }
+  let startYear;
+  if (yearsShown === 25) {
+    startYear = Math.min(...Array.from(allYears), thisYear - 5) || 2002;
+    startYear = Math.max(startYear, 2002);
+  } else {
+    startYear = thisYear - yearsShown + 1;
+  }
+  const years = [];
+  for (let y = startYear; y <= projectedYear; y++) years.push(y);
+
+  // Build header — current year is labeled YTD (partial), next year is "exp" (projected)
+  const yearHdrs = years.map(y => {
+    if (y === projectedYear) return `<th class="num">${y} <span style="color:var(--gold-soft)">exp</span>`;
+    if (y === thisYear)      return `<th class="num">${y} <span style="color:var(--gold-soft)">ytd</span>`;
+    return `<th class="num">${y}</th>`;
+  }).join('');
+  const hdr = `<tr><th>Ticker</th><th>Company</th>${yearHdrs}<th class="num">TTM DGR</th><th class="num">3-yr DGR</th><th class="num">5-yr DGR</th></tr>`;
+
+  // Body rows
+  const body = rows.map(r => {
+    if (r.error) {
+      return `<tr class="err"><td class="ticker">${r.symbol}</td><td colspan="${years.length + 4}">No data</td></tr>`;
+    }
+    const byYear = r.divByYear || {};
+    const cells = years.map(y => {
+      if (y === projectedYear) {
+        // Project using 3-yr DGR applied to last FULL year (never the partial current year)
+        const baseVal = byYear[String(lastFullYear)] || 0;
+        const proj = r.dgr3 != null && baseVal ? baseVal * (1 + r.dgr3) : null;
+        return `<td class="num mono" style="color:var(--gold)">${proj ? fmtNum(proj, 2) : '—'}</td>`;
+      }
+      const v = byYear[String(y)] || 0;
+      // Current-year YTD values are italicized to signal they're partial
+      if (y === thisYear) {
+        return `<td class="num mono" style="color:var(--muted); font-style:italic">${v > 0 ? fmtNum(v, 2) : '<span style="color:var(--rule)">—</span>'}</td>`;
+      }
+      return `<td class="num mono">${v > 0 ? fmtNum(v, 2) : '<span style="color:var(--rule)">—</span>'}</td>`;
+    }).join('');
+    return `<tr>
+      <td class="ticker">${r.symbol}</td>
+      <td class="company">${r.companyName || ''}</td>
+      ${cells}
+      <td class="num mono ${gainLoss(r.dgr1)}">${fmtPct(r.dgr1)}</td>
+      <td class="num mono ${gainLoss(r.dgr3)}">${fmtPct(r.dgr3)}</td>
+      <td class="num mono ${gainLoss(r.dgr5)}">${fmtPct(r.dgr5)}</td>
+    </tr>`;
+  }).join('');
+
+  // Totals: average DPS per year (equal-weighted)
+  const portfolioByYear = {};
+  for (const y of years) {
+    let total = 0;
+    for (const r of rows) {
+      if (r.error) continue;
+      const dps = r.divByYear?.[String(y)] || 0;
+      total += dps * (r.weight || 0);
+    }
+    portfolioByYear[y] = total;
+  }
+  // Projected — always base on last FULL year, never current partial year
+  let projPortfolio = 0;
+  for (const r of rows) {
+    if (r.error) continue;
+    const baseVal = r.divByYear?.[String(lastFullYear)] || 0;
+    const proj = r.dgr3 != null && baseVal ? baseVal * (1 + r.dgr3) : baseVal;
+    projPortfolio += proj * (r.weight || 0);
+  }
+  portfolioByYear[projectedYear] = projPortfolio;
+
+  const portRow = years.map(y => {
+    const v = portfolioByYear[y] || 0;
+    const isProj = y === projectedYear;
+    return `<td class="num mono" style="${isProj ? 'color:var(--gold); font-weight:700' : 'font-weight:700'}">${v > 0 ? fmtNum(v, 4) : '—'}</td>`;
+  }).join('');
+
+  // YoY % change row — skip the YTD comparison since it would misleadingly show a partial-year drop
+  const changeRow = years.map((y, i) => {
+    if (i === 0) return `<td></td>`;
+    if (y === thisYear) return `<td style="color:var(--muted); font-size:11px; font-style:italic; text-align:right">ytd</td>`;
+    const prev = portfolioByYear[years[i-1]];
+    const curr = portfolioByYear[y];
+    if (!prev) return `<td></td>`;
+    // For the projected year, compare against last FULL year, not partial current year
+    if (y === projectedYear) {
+      const lastFullVal = portfolioByYear[lastFullYear];
+      if (!lastFullVal) return `<td></td>`;
+      const chg = (curr / lastFullVal - 1);
+      return `<td class="num mono ${gainLoss(chg)}" style="font-size:11px">${fmtPct1(chg)}</td>`;
+    }
+    const chg = (curr / prev - 1);
+    return `<td class="num mono ${gainLoss(chg)}" style="font-size:11px">${fmtPct1(chg)}</td>`;
+  }).join('');
+
+  const totalsBody = `
+    <tr class="total"><td colspan="2" style="font-weight:700">Portfolio DPS (equal-wtd):</td>${portRow}<td colspan="3"></td></tr>
+    <tr><td colspan="2" style="font-size:11px; color:var(--muted)">Year-over-year:</td>${changeRow}<td colspan="3"></td></tr>
+  `;
+
+  document.getElementById('historyTable').innerHTML = `<thead>${hdr}</thead><tbody>${body}${totalsBody}</tbody>`;
+  document.getElementById('portfolioIncomeTable').innerHTML = '';
+}
+
+/* ============================================================
+   TAB SWITCHING
+   ============================================================ */
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-bar button').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+(function init() {
+  loadState();
+  if (!state.workerUrl && DEFAULT_WORKER_URL) state.workerUrl = DEFAULT_WORKER_URL;
+  const urlField = document.getElementById('workerUrl');
+  if (urlField) urlField.value = state.workerUrl || '';
+  updateWorkerStatus();
+  renderPortfolioSelect();
+  renderTickerBox();
+  updateMasthead();
+})();
+</script>
+</body>
+</html>
