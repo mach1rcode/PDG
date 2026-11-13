@@ -1,1315 +1,729 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#1a2d52">
-<title>Predictable Dividend Growth</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDG Portfolio Update 2026 Q3</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Carlito:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #faf8f3;
-    --surface: #ffffff;
-    --surface-muted: #f3efe6;
-    --ink: #141b2d;
-    --ink-soft: #3d4a64;
-    --muted: #767a82;
-    --rule: #dcd5c5;
-    --rule-soft: #ece7d9;
-    --navy: #1a2d52;
-    --navy-deep: #0f1d3a;
-    --gold: #9e7c2e;
-    --gold-soft: #c8a45c;
-    --gain: #0d6a3f;
-    --loss: #a82817;
-    --highlight: #fff6d9;
-    --shadow: 0 1px 2px rgba(20,27,45,.04), 0 4px 16px rgba(20,27,45,.06);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body {
-    font-family: 'Source Sans 3', -apple-system, sans-serif;
-    font-size: 16px;
-    line-height: 1.5;
-    color: var(--ink);
-    background: var(--bg);
-    -webkit-font-smoothing: antialiased;
-    -webkit-text-size-adjust: 100%;
-  }
-  body {
-    padding: 24px 20px 80px;
-    max-width: 1400px;
-    margin: 0 auto;
-    min-height: 100vh;
-  }
-  h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; letter-spacing: -0.01em; }
-  .num, td.num, th.num { font-family: 'JetBrains Mono', 'Consolas', monospace; font-variant-numeric: tabular-nums; }
+:root{
+  /* Layout: an Excel-style workbook. Title bar, formula bar, scrolling grid, sheet tabs, status bar. One light theme on purpose, to match the workbook. */
+  --paper:#ffffff;
+  --chrome:#f3f2f1;
+  --line:#d1d1d1;
+  --grid:#e2e2e2;
+  --ink:#141414;
+  --muted:#5f5e5c;
+  --accent:#217346;
+  --accent-soft:#e2efe7;
+  --fill-yellow:#ffff00;
+  --fill-orange:#ffc000;
+  --fill-tan:#c9ad73;
+  --fill-green:#92d050;
+  --warn-soft:#fde7e4;
+  --warn-ink:#a4262c;
+  --font-cell:Calibri, Carlito, "Segoe UI", Arial, sans-serif;
+  --font-ui:"Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --zoom:1;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--chrome);color:var(--ink);font-family:var(--font-ui);font-size:13px;display:flex;flex-direction:column;overflow:hidden}
+button{font:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 
-  /* === Masthead === */
-  .masthead {
-    border-top: 4px solid var(--navy);
-    border-bottom: 1px solid var(--rule);
-    padding: 28px 0 20px;
-    margin-bottom: 32px;
-    text-align: center;
-    position: relative;
-  }
-  .masthead .kicker {
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--gold);
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
-  .masthead h1 {
-    font-size: clamp(32px, 6vw, 54px);
-    line-height: 1;
-    font-weight: 700;
-    color: var(--navy-deep);
-    font-style: italic;
-  }
-  .masthead .subtitle {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    color: var(--muted);
-    font-size: 15px;
-    margin-top: 8px;
-  }
-  .masthead .date-line {
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin-top: 14px;
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .masthead .date-line span.sep { color: var(--rule); }
+/* title bar */
+.titlebar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 16px;background:var(--paper);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.doc{display:flex;align-items:center;gap:10px;min-width:0}
+.doc svg{flex:none}
+.doc-name{font-weight:600;font-size:14px;white-space:nowrap}
+.doc-sub{color:var(--muted);font-size:12px}
+.actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:6px 12px;border-radius:4px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--chrome)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:#1a5c38}
+.btn[disabled]{opacity:.6;cursor:progress}
+.pill{font-size:11px;font-weight:600;color:var(--accent);background:var(--accent-soft);border-radius:10px;padding:2px 8px}
 
-  /* === Cards === */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 2px;
-    padding: 24px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow);
-  }
-  .card h2 {
-    font-size: 22px;
-    color: var(--navy-deep);
-    margin-bottom: 4px;
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-  }
-  .card h2 .section-num {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: var(--gold);
-    font-weight: 500;
-    letter-spacing: 0.1em;
-  }
-  .card .card-desc {
-    color: var(--muted);
-    font-size: 14px;
-    margin-bottom: 20px;
-    font-style: italic;
-  }
+/* formula bar */
+.fbar{display:flex;align-items:stretch;gap:0;background:var(--paper);border-bottom:1px solid var(--line);min-height:30px}
+.namebox{width:84px;flex:none;border-right:1px solid var(--line);display:flex;align-items:center;padding:0 8px;font-family:var(--font-cell);font-size:14px}
+.fx-icons{display:flex;align-items:center;gap:10px;padding:0 10px;color:#a19f9d;border-right:1px solid var(--line);flex:none;font-size:13px}
+.fx-icons i{font-family:Georgia,serif;color:var(--muted)}
+.fx{flex:1;display:flex;align-items:center;gap:16px;padding:4px 10px;min-width:0;flex-wrap:wrap}
+.fx-text{font-family:var(--font-cell);font-size:14px;white-space:pre-wrap;word-break:break-word}
+.fx-src{color:var(--muted);font-size:12px;margin-left:auto}
 
-  /* === Forms === */
-  label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin-bottom: 8px;
-  }
-  input[type="text"], input[type="password"], textarea, select {
-    width: 100%;
-    padding: 12px 14px;
-    font-family: inherit;
-    font-size: 16px;
-    color: var(--ink);
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 2px;
-    transition: border-color .15s, box-shadow .15s;
-  }
-  input:focus, textarea:focus, select:focus {
-    outline: none;
-    border-color: var(--navy);
-    box-shadow: 0 0 0 3px rgba(26,45,82,.08);
-  }
-  textarea {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 15px;
-    resize: vertical;
-    min-height: 200px;
-    line-height: 1.6;
-  }
-  select { cursor: pointer; }
-  .field { margin-bottom: 16px; }
-  .field-row { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
-  .field-row .field { flex: 1; min-width: 200px; margin-bottom: 0; }
-  .hint {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 6px;
-    line-height: 1.45;
-  }
-  .hint a { color: var(--navy); text-decoration: underline; text-underline-offset: 2px; }
+/* grid */
+.sheet-area{flex:1;overflow:auto;background:var(--paper);position:relative}
+.zoomer{zoom:var(--zoom);width:max-content}
+table.grid{border-collapse:separate;border-spacing:0;table-layout:fixed;font-family:var(--font-cell);font-size:15px;font-variant-numeric:tabular-nums;color:#000;background:var(--paper)}
+.grid th,.grid td{height:21px;padding:0 4px;border-right:1px solid var(--grid);border-bottom:1px solid var(--grid);white-space:nowrap;overflow:hidden;text-overflow:clip;line-height:19px}
+.grid thead th{position:sticky;top:0;z-index:3;background:var(--chrome);color:#444;font-weight:400;font-size:12px;text-align:center;border-right:1px solid var(--line);border-bottom:1px solid var(--line);font-family:var(--font-ui)}
+.grid th.rowhdr{position:sticky;left:0;z-index:2;background:var(--chrome);color:#444;font-weight:400;font-size:12px;text-align:center;border-right:1px solid var(--line);border-bottom:1px solid var(--line);font-family:var(--font-ui);width:42px}
+.grid thead th.corner{left:0;z-index:4}
+.grid th.on{background:#d9d9d9;color:var(--accent);box-shadow:inset 0 -2px 0 var(--accent)}
+.grid th.rowhdr.on{box-shadow:inset -2px 0 0 var(--accent)}
+.grid td{cursor:cell;vertical-align:bottom}
+.grid td.c{text-align:center}.grid td.r{text-align:right}.grid td.l{text-align:left}
+.grid td.b{font-weight:700}
+.grid td.u span{text-decoration:underline;text-underline-offset:2px}
+.grid td.hdr{white-space:pre-line;line-height:21px;vertical-align:bottom;text-align:center;font-weight:700}
+.grid td.hdr span{text-decoration:underline;text-underline-offset:2px}
+.grid td.frz,.grid th.frz{position:sticky;z-index:1;background-color:var(--paper)}
+.grid thead th.frz{z-index:4;background-color:var(--chrome)}
+.grid th.frz.on{background-color:#d9d9d9}
+.grid .frz-last{border-right:1px solid #9e9e9e}
+.grid td.fy{background:var(--fill-yellow)}
+.grid td.fo{background:var(--fill-orange)}
+.grid td.ft{background:var(--fill-tan)}
+.grid td.fg{background:var(--fill-green)}
+.grid td.ind{padding-left:22px}
+.grid td.box-l{box-shadow:inset 1px 0 0 #6b6b6b}
+.grid td.box-t{box-shadow:inset 0 1px 0 #6b6b6b}
+.grid td.box-l.box-t{box-shadow:inset 1px 1px 0 #6b6b6b}
+.grid td.box-b{border-bottom:1px solid #6b6b6b}
+.grid{touch-action:manipulation}
+.grid td.edit{color:#0b3d91}
+.grid td.edited{color:#0b57d0;font-style:italic}
+.grid td.na{color:#000}
+.grid td.insel{background-image:linear-gradient(rgba(33,115,70,.12),rgba(33,115,70,.12))}
+.grid td.active{box-shadow:inset 0 0 0 2px var(--accent)}
+.grid td input{width:100%;height:19px;border:0;outline:0;font:inherit;padding:0;text-align:right;background:#fff}
 
-  /* === Buttons === */
-  button {
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 600;
-    padding: 12px 22px;
-    border: 1px solid var(--rule);
-    background: var(--surface);
-    color: var(--ink);
-    border-radius: 2px;
-    cursor: pointer;
-    letter-spacing: 0.02em;
-    transition: all .15s;
-    white-space: nowrap;
-  }
-  button:hover:not(:disabled) {
-    border-color: var(--ink-soft);
-    background: var(--surface-muted);
-  }
-  button:disabled { opacity: .5; cursor: not-allowed; }
-  button.primary {
-    background: var(--navy);
-    color: white;
-    border-color: var(--navy);
-    padding: 14px 32px;
-    font-size: 16px;
-  }
-  button.primary:hover:not(:disabled) {
-    background: var(--navy-deep);
-    border-color: var(--navy-deep);
-  }
-  button.gold {
-    background: var(--gold);
-    color: white;
-    border-color: var(--gold);
-  }
-  button.gold:hover:not(:disabled) {
-    background: #8a6a22;
-    border-color: #8a6a22;
-  }
-  button.danger { color: var(--loss); }
-  button.danger:hover:not(:disabled) { background: #fdecea; border-color: var(--loss); }
-  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 16px; }
+/* sources tab */
+.doc-page{font-family:var(--font-cell);font-size:15px;line-height:1.45;padding:20px 24px 40px;max-width:1400px}
+.doc-page h2{font-size:20px;margin:6px 0 6px;text-wrap:balance}
+.doc-page h3{font-size:16px;margin:22px 0 6px}
+.doc-page p{max-width:72ch;margin:4px 0}
+.doc-page ul{max-width:90ch;padding-left:22px;margin:6px 0}
+.doc-page li{margin:4px 0}
+.xtable{border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:14px;margin-top:8px}
+.xtable th,.xtable td{border:1px solid var(--grid);padding:3px 8px;white-space:nowrap}
+.xtable th{background:var(--chrome);font-weight:700;text-align:center;vertical-align:bottom;white-space:normal;min-width:70px}
+.xtable td.n{text-align:right}
+.xtable td.diff{background:var(--warn-soft);color:var(--warn-ink)}
+.xtable a{color:var(--accent)}
+.tblwrap{overflow-x:auto}
+.key{display:inline-block;width:12px;height:12px;background:var(--warn-soft);border:1px solid #e3b7b2;vertical-align:-1px;margin-right:4px}
 
-  /* === Status === */
-  #status {
-    margin: 16px 0;
-    padding: 14px 18px;
-    border-left: 3px solid var(--gold);
-    background: var(--highlight);
-    color: var(--ink-soft);
-    font-size: 14px;
-    display: none;
-  }
-  #status.error { border-left-color: var(--loss); background: #fdecea; color: var(--loss); }
-  #status.success { border-left-color: var(--gain); background: #e8f5ee; color: var(--gain); }
-  .progress-bar {
-    height: 4px;
-    background: var(--rule-soft);
-    margin-top: 10px;
-    overflow: hidden;
-    border-radius: 2px;
-  }
-  .progress-bar-fill {
-    height: 100%;
-    background: var(--navy);
-    transition: width .3s;
-    width: 0;
-  }
-
-  /* === Tabs === */
-  .tab-bar {
-    border-bottom: 2px solid var(--navy);
-    display: flex;
-    gap: 0;
-    margin-bottom: 20px;
-    overflow-x: auto;
-  }
-  .tab-bar button {
-    border: none;
-    background: transparent;
-    padding: 12px 20px;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--muted);
-    border-bottom: 3px solid transparent;
-    margin-bottom: -2px;
-    cursor: pointer;
-    white-space: nowrap;
-  }
-  .tab-bar button:hover { color: var(--ink); background: transparent; }
-  .tab-bar button.active {
-    color: var(--navy);
-    border-bottom-color: var(--gold);
-  }
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
-
-  /* === Tables === */
-  .table-wrap {
-    overflow-x: auto;
-    border: 1px solid var(--rule);
-    border-radius: 2px;
-    background: var(--surface);
-    margin-bottom: 16px;
-    -webkit-overflow-scrolling: touch;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-  thead { background: var(--navy); color: white; }
-  thead th {
-    padding: 10px 10px;
-    text-align: left;
-    font-weight: 600;
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    vertical-align: bottom;
-    border-right: 1px solid rgba(255,255,255,.08);
-  }
-  thead th.group {
-    text-align: center;
-    border-bottom: 1px solid rgba(255,255,255,.2);
-    font-size: 10px;
-    color: var(--gold-soft);
-    font-style: italic;
-    font-weight: 500;
-  }
-  thead th.num { text-align: right; }
-  tbody td {
-    padding: 9px 10px;
-    border-bottom: 1px solid var(--rule-soft);
-    border-right: 1px solid var(--rule-soft);
-    vertical-align: middle;
-  }
-  tbody td.num { text-align: right; font-size: 13px; }
-  tbody td.ticker { font-weight: 700; color: var(--navy); letter-spacing: 0.03em; }
-  tbody td.company { font-size: 12px; color: var(--ink-soft); min-width: 120px; }
-  tbody td.sector { font-size: 11px; color: var(--muted); white-space: nowrap; }
-  tbody tr:hover { background: var(--surface-muted); }
-  tbody tr.total {
-    background: var(--highlight);
-    font-weight: 700;
-    border-top: 2px solid var(--navy);
-  }
-  tbody tr.total td { border-bottom: 2px solid var(--navy); }
-  tbody tr.err td { color: var(--loss); font-style: italic; }
-  td.gain { color: var(--gain); font-weight: 500; }
-  td.loss { color: var(--loss); font-weight: 500; }
-  td.mono { font-family: 'JetBrains Mono', monospace; }
-
-  /* === View controls === */
-  .view-controls {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-  }
-  .view-controls label { margin: 0; font-size: 12px; }
-  .checkbox-row { display: flex; gap: 8px; align-items: center; font-size: 13px; }
-  .checkbox-row input { width: auto; }
-
-  /* === Footer actions === */
-  .footer-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    margin-top: 24px;
-    flex-wrap: wrap;
-  }
-
-  /* === Summary stats === */
-  .portfolio-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 0;
-    margin-bottom: 24px;
-    border: 1px solid var(--rule);
-    background: var(--surface);
-  }
-  .stat {
-    padding: 16px 18px;
-    border-right: 1px solid var(--rule);
-    text-align: center;
-  }
-  .stat:last-child { border-right: none; }
-  .stat-label {
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 4px;
-    font-weight: 600;
-  }
-  .stat-value {
-    font-family: 'Fraunces', serif;
-    font-size: 24px;
-    font-weight: 600;
-    color: var(--navy-deep);
-    line-height: 1.1;
-  }
-  .stat-value .unit {
-    font-size: 14px;
-    color: var(--muted);
-    font-weight: 400;
-    margin-left: 2px;
-  }
-
-  /* === Modal === */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(15,29,58,.5);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 20px;
-  }
-  .modal-overlay.show { display: flex; }
-  .modal {
-    background: var(--surface);
-    padding: 32px;
-    border-radius: 2px;
-    max-width: 480px;
-    width: 100%;
-    border-top: 4px solid var(--gold);
-  }
-  .modal h3 {
-    font-size: 22px;
-    margin-bottom: 8px;
-    color: var(--navy-deep);
-  }
-  .modal p { color: var(--ink-soft); margin-bottom: 16px; font-size: 14px; }
-  .modal .btn-row { justify-content: flex-end; margin-top: 20px; }
-
-  /* === Print === */
-  @media print {
-    @page { size: letter landscape; margin: 0.4in; }
-    body { padding: 0; max-width: none; background: white; }
-    .no-print, button, .tab-bar, select, input, textarea, .hint,
-    #setupCard, #portfolioCard, #status, .footer-actions, .view-controls { display: none !important; }
-    .card { border: none; box-shadow: none; padding: 0; margin-bottom: 12px; page-break-inside: avoid; }
-    .masthead { margin-bottom: 12px; padding: 8px 0; border-top: 3px solid var(--navy); }
-    .masthead h1 { font-size: 32px; }
-    .masthead .date-line { font-size: 10px; margin-top: 6px; }
-    .tab-panel { display: block !important; page-break-after: always; }
-    .tab-panel:last-child { page-break-after: auto; }
-    .tab-panel.print-hide { display: none !important; }
-    .table-wrap { border: 1px solid #888; overflow: visible; }
-    table { font-size: 9.5px; }
-    thead th { padding: 5px 5px; font-size: 9px; background: #1a2d52 !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    tbody td { padding: 4px 5px; font-size: 9.5px; }
-    .portfolio-stats { page-break-inside: avoid; }
-    .stat { padding: 8px 10px; }
-    .stat-value { font-size: 16px; }
-    tbody tr.total { background: #fff6d9 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    tr { page-break-inside: avoid; }
-    .section-num { display: none; }
-  }
-
-  /* === Mobile === */
-  @media (max-width: 640px) {
-    body { padding: 12px 12px 60px; }
-    .card { padding: 18px; }
-    .stat-value { font-size: 20px; }
-    .masthead { padding: 18px 0 14px; margin-bottom: 20px; }
-    button.primary { padding: 14px 24px; width: 100%; }
-    .btn-row button { flex: 1; min-width: 120px; }
-  }
+/* tabs + status */
+footer{flex:none;background:var(--chrome);border-top:1px solid var(--line)}
+.tabs{display:flex;align-items:stretch;gap:0;height:30px;padding-left:8px;overflow-x:auto}
+.tab{border:0;background:transparent;padding:0 16px;cursor:pointer;color:#333;white-space:nowrap;border-bottom:3px solid transparent;font-size:13px}
+.tab:hover{background:#e6e6e6}
+.tab[aria-selected="true"]{background:var(--paper);color:var(--accent);font-weight:600;border-bottom-color:var(--accent)}
+.tab-sep{width:1px;background:var(--line);margin:6px 0}
+.status{display:flex;align-items:center;gap:18px;height:24px;padding:0 12px;font-size:12px;color:#444;border-top:1px solid var(--line);background:var(--chrome)}
+.status .stats{margin-left:auto;display:flex;gap:16px}
+.zoomctl{display:flex;align-items:center;gap:6px}
+.zoomctl button{border:0;background:transparent;cursor:pointer;font-size:14px;color:#444;width:20px}
+.zoomctl input{width:110px;accent-color:var(--accent)}
+#toast{position:fixed;left:50%;bottom:70px;transform:translateX(-50%);background:#323130;color:#fff;padding:8px 14px;border-radius:4px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center}
+#toast.show{opacity:1}
+@media (prefers-reduced-motion: reduce){#toast{transition:none}}
+@media (max-width:640px){
+  .doc-sub{display:none}
+  .fx-icons{display:none}
+  .zoomctl input{width:70px}
+  .status .stats{display:none}
+}
+@media print{
+  .titlebar,.fbar,footer,#toast{display:none!important}
+  body{overflow:visible;display:block;background:#fff}
+  .sheet-area{overflow:visible}
+  .grid thead th,.grid th.rowhdr{display:none}
+}
 </style>
 </head>
 <body>
-
-<header class="masthead">
-  <h1>Predictable Dividend Growth</h1>
-  <div class="date-line">
-    <span id="displayDate">—</span>
-    <span class="sep">·</span>
-    <span id="displayPortfolio">No portfolio selected</span>
-    <span class="sep">·</span>
-    <span id="displayHoldings">0 holdings</span>
+<header class="titlebar">
+  <div class="doc">
+    <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect x="1" y="1" width="20" height="20" rx="3" fill="var(--accent)"/><path d="M1 8h20M1 14h20M8 8v13M14 8v13" stroke="#fff" stroke-width="1.4"/></svg>
+    <div>
+      <div class="doc-name">PDG Portfolio Update 2026 Q3</div>
+      <div class="doc-sub">Prices and data as of November 05, 2026</div>
+    </div>
+  </div>
+  <div class="actions">
+    <span id="editPill" class="pill" hidden>Edited</span>
+    <button id="btnReset" class="btn" type="button" hidden>Reset to 11/05/2026 values</button>
+    <button id="btnPrint" class="btn primary" type="button">Print report (PDF)</button>
   </div>
 </header>
-
-<!-- === SETUP === -->
-<section id="setupCard" class="card no-print">
-  <h2><span class="section-num">§ 01</span> Setup <span id="workerBadge" style="font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); font-family:'Source Sans 3'; margin-left:8px; font-weight:600"></span></h2>
-  <p class="card-desc">One-time: connect your Cloudflare Worker. Data stays between your browser and your own proxy.</p>
-  <div class="field-row">
-    <div class="field" style="flex:3">
-      <label for="workerUrl">Cloudflare Worker URL</label>
-      <input type="url" id="workerUrl" placeholder="https://pdg-proxy.your-name.workers.dev" autocomplete="off">
-      <div class="hint">New to this? See setup steps in the <code style="background:var(--surface-muted); padding:2px 6px; border-radius:2px; font-family:'JetBrains Mono',monospace; font-size:12px">worker.js</code> file header — 5 minutes, free Cloudflare account, no credit card.</div>
-    </div>
-    <div class="field" style="min-width:auto">
-      <button onclick="saveWorkerUrl()" class="gold">Save</button>
-    </div>
-    <div class="field" style="min-width:auto">
-      <button onclick="testWorker()">Test</button>
-    </div>
-  </div>
-</section>
-
-<!-- === PORTFOLIO === -->
-<section id="portfolioCard" class="card no-print">
-  <h2><span class="section-num">§ 02</span> Portfolio</h2>
-  <p class="card-desc">Choose a saved portfolio or create a new one. All data stays on this device.</p>
-
-  <div class="field-row">
-    <div class="field" style="flex:2">
-      <label for="portfolioSelect">Active Portfolio</label>
-      <select id="portfolioSelect" onchange="switchPortfolio()"></select>
-    </div>
-    <div class="field" style="min-width:auto">
-      <button onclick="newPortfolio()">+ New</button>
-    </div>
-    <div class="field" style="min-width:auto">
-      <button onclick="renamePortfolio()">Rename</button>
-    </div>
-    <div class="field" style="min-width:auto">
-      <button onclick="deletePortfolio()" class="danger">Delete</button>
-    </div>
-  </div>
-
-  <div class="field">
-    <label for="tickersInput">Holdings — one ticker per line, equal-weighted</label>
-    <textarea id="tickersInput" placeholder="ABBV&#10;AMGN&#10;BBY&#10;BMY&#10;CI&#10;EOG&#10;LMT&#10;LOW&#10;...&#10;&#10;Each holding gets 1/N of the portfolio."></textarea>
-    <div class="hint">One ticker per line. The portfolio is equal-weighted — each holding gets <code style="background:var(--surface-muted); padding:2px 6px; border-radius:2px; font-family:'JetBrains Mono',monospace; font-size:12px">1 / N</code> weight.</div>
-  </div>
-
-  <div class="btn-row">
-    <button onclick="savePortfolio()">Save Changes</button>
-    <button id="updateBtn" onclick="updatePrices()" class="primary">↻ Update Prices &amp; Data</button>
-    <span id="lastUpdate" class="hint" style="margin:0 0 0 auto; font-size:12px"></span>
-  </div>
-</section>
-
-<div id="status"></div>
-
-<!-- === RESULTS === -->
-<section id="resultsCard" class="card" style="display:none">
-  <div class="tab-bar no-print">
-    <button class="active" onclick="showTab('summary', this)">Final Portfolio</button>
-    <button onclick="showTab('history', this)">Historical Dividends</button>
-  </div>
-
-  <!-- Final Portfolio tab -->
-  <div id="tab-summary" class="tab-panel active">
-    <div class="portfolio-stats" id="portfolioStats"></div>
-
-    <div class="view-controls no-print">
-      <label style="margin:0">View:</label>
-      <label class="checkbox-row">
-        <input type="checkbox" id="viewCompact" onchange="renderSummary()"> Compact (print-friendly)
-      </label>
-    </div>
-
-    <div class="table-wrap">
-      <table id="summaryTable"></table>
-    </div>
-  </div>
-
-  <!-- Historical Dividends tab -->
-  <div id="tab-history" class="tab-panel">
-    <div class="view-controls no-print">
-      <label style="margin:0">Years shown:</label>
-      <select id="yearsShown" onchange="renderHistory()" style="width:auto; padding:6px 12px">
-        <option value="10">Last 10 + projected</option>
-        <option value="15">Last 15 + projected</option>
-        <option value="25" selected>All (2002 → projected)</option>
-      </select>
-    </div>
-    <div class="table-wrap">
-      <table id="historyTable"></table>
-    </div>
-    <div id="portfolioIncomeTable" style="margin-top:16px"></div>
-  </div>
-
-  <div class="footer-actions">
-    <button onclick="window.print()" class="primary">🖨 Print / Save as PDF</button>
-  </div>
-</section>
-
-<!-- === Modal === -->
-<div id="modal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
-  <div class="modal">
-    <h3 id="modalTitle">Heading</h3>
-    <p id="modalBody">Body</p>
-    <div class="field">
-      <input type="text" id="modalInput">
-    </div>
-    <div class="btn-row">
-      <button onclick="closeModal()">Cancel</button>
-      <button onclick="confirmModal()" class="primary">OK</button>
-    </div>
-  </div>
+<div class="fbar">
+  <div class="namebox" id="nameBox" aria-label="Selected cell">A1</div>
+  <div class="fx-icons" aria-hidden="true"><span>&#x2715;</span><span>&#x2713;</span><i>fx</i></div>
+  <div class="fx"><span class="fx-text" id="fxText"></span><span class="fx-src" id="fxSrc"></span></div>
 </div>
+<main class="sheet-area" id="area" tabindex="0" aria-label="Worksheet"><div class="zoomer" id="zoomer"></div></main>
+<footer>
+  <div class="tabs" role="tablist" aria-label="Sheets">
+    <button class="tab" role="tab" id="tab-fp" data-sheet="fp" aria-selected="true">Final Portfolio</button>
+    <span class="tab-sep"></span>
+    <button class="tab" role="tab" id="tab-hist" data-sheet="hist" aria-selected="false">Historical Data</button>
+    <span class="tab-sep"></span>
+    <button class="tab" role="tab" id="tab-src" data-sheet="src" aria-selected="false">Sources &amp; Checks</button>
+  </div>
+  <div class="status">
+    <span id="statusLeft">Ready</span>
+    <span class="stats" id="stats"></span>
+    <span class="zoomctl"><button type="button" id="zOut" aria-label="Zoom out">&minus;</button><input type="range" id="zoom" min="50" max="150" step="5" value="100" aria-label="Zoom"><button type="button" id="zIn" aria-label="Zoom in">+</button><span id="zLabel">100%</span></span>
+  </div>
+</footer>
+<div id="toast" role="status" aria-live="polite"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
 <script>
-/* ============================================================
-   STATE MANAGEMENT
-   ============================================================ */
-const STORAGE_KEY = 'pdg_v1';
-// Hardcoded default Worker URL. Anyone opening this file goes straight to entering tickers.
-// Users can still override this via Section 01 if they want to point at a different worker.
-const DEFAULT_WORKER_URL = 'https://pdg-proxy.rpaschen.workers.dev';
+"use strict";
+const DATA = {"title":"PDG Portfolio Update 2026 Q3","asOf":"November 05, 2026","years":[2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026],"holdings":[{"n":1,"name":"AbbVie, Inc.","t":"ABBV","price":288.24,"shares":855,"pe":49.6,"yld":2.5,"peg":1.3,"payout":76.46,"egr":-22.2,"beta":0.5,"roe":15221.82,"cfdiv":2.4,"qrev":5.4,"sector":"Health Care","div":[0,0,0,0,0,0,0,0,0,0,0,1.6,1.66,2.02,2.28,2.56,3.59,4.28,4.72,5.2,5.64,5.92,6.2,6.56,5.19],"qtrs":3,"lastQ":1.73,"priorQ":1.64,"ttmOverride":null,"pub":{"cik":"0001551152","rate":1.82,"rateSrc":"SEC 8-K, Oct 30 2026: $1.82 from Feb 2027 dividend","lastQ":1.73,"priorQ":1.64,"d2025":6.56,"ytd2026":6.92,"n2026":4,"secEps":5.81,"secPeriod":"Q4'25\u2013Q3'26","secCurrent":true,"secSrc":"Q3'26 from 8-K press release, Oct 30 2026","secNote":null}},{"n":2,"name":"Amgen Inc.","t":"AMGN","price":460.28,"shares":344,"pe":26.7,"yld":2.2,"peg":3.2,"payout":17.7,"egr":8.5,"beta":0.6,"roe":106.1,"cfdiv":3.1,"qrev":0.9,"sector":"Health Care","div":[0,0,0,0,0,0,0,0,0,0.56,1.44,1.88,2.44,3.16,4.0,4.6,5.28,5.8,6.4,7.04,7.76,8.52,9.0,9.52,7.56],"qtrs":3,"lastQ":2.52,"priorQ":2.38,"ttmOverride":null,"pub":{"cik":"0000318154","rate":2.52,"rateSrc":"stockanalysis.com dividend history","lastQ":2.52,"priorQ":2.38,"d2025":9.52,"ytd2026":7.56,"n2026":3,"secEps":16.09,"secPeriod":"Q3'25\u2013Q2'26","secCurrent":false,"secSrc":"","secNote":null}},{"n":3,"name":"Best Buy Co., Inc.","t":"BBY","price":99.4,"shares":1253,"pe":16.5,"yld":3.9,"peg":2.5,"payout":18.8,"egr":-15.4,"beta":1.1,"roe":37.04,"cfdiv":4.5,"qrev":1.1,"sector":"Consumer Discretionary","div":[0,0.2,0.28,0.37,0.36,0.33,0.53,0.7,0.58,0.62,0.66,0.68,0.72,1.43,1.57,1.36,1.8,2.0,2.2,2.8,3.52,3.68,3.76,3.8,2.88],"qtrs":3,"lastQ":0.96,"priorQ":0.95,"ttmOverride":null,"pub":{"cik":"0000764478","rate":0.96,"rateSrc":"stockanalysis.com dividend history","lastQ":0.96,"priorQ":0.95,"d2025":3.8,"ytd2026":2.88,"n2026":3,"secEps":5.4,"secPeriod":"fiscal qtrs to May 2 2026","secCurrent":false,"secSrc":"","secNote":null}},{"n":4,"name":"Cigna Group","t":"CI","price":301.48,"shares":300,"pe":13.3,"yld":2.1,"peg":0.9,"payout":6.9,"egr":9.0,"beta":0.6,"roe":14.4,"cfdiv":6.2,"qrev":1.7,"sector":"Health Care","div":[0.44,0.44,0.14,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,4.0,4.48,4.92,5.6,6.04,4.68],"qtrs":3,"lastQ":1.56,"priorQ":1.51,"ttmOverride":null,"pub":{"cik":"0001739940","rate":1.56,"rateSrc":"stockanalysis.com dividend history","lastQ":1.56,"priorQ":1.51,"d2025":6.04,"ytd2026":4.68,"n2026":3,"secEps":22.66,"secPeriod":"Q4'25\u2013Q3'26","secCurrent":true,"secSrc":"10-Q filed Nov 5 2026","secNote":null}},{"n":5,"name":"EOG Resources, Inc.","t":"EOG","price":144.89,"shares":511,"pe":9.4,"yld":3.0,"peg":0.5,"payout":11.6,"egr":3.4,"beta":0.7,"roe":16.83,"cfdiv":6.6,"qrev":-7.1,"sector":"Energy","div":[0.04,0.04,0.07,0.08,0.11,0.18,0.24,0.28,0.31,0.32,0.35,0.36,0.52,0.68,0.68,0.68,0.77,1.02,1.43,1.61,3.0,3.32,3.64,3.95,3.06],"qtrs":3,"lastQ":1.02,"priorQ":0.975,"ttmOverride":null,"pub":{"cik":"0000821189","rate":1.1,"rateSrc":"SEC 10-Q (Q3 2026): raised to $1.10 on Nov 5 2026","lastQ":1.02,"priorQ":1.02,"d2025":3.945,"ytd2026":4.08,"n2026":4,"secEps":12.86,"secPeriod":"Q3'25\u2013Q2'26","secCurrent":false,"secSrc":"","secNote":null}},{"n":6,"name":"Lockheed Martin Corporation","t":"LMT","price":576.16,"shares":185,"pe":20.5,"yld":2.5,"peg":0.9,"payout":16.6,"egr":-1.4,"beta":0.5,"roe":76.87,"cfdiv":4.3,"qrev":9.4,"sector":"Industrials","div":[0.44,0.57,0.91,1.05,1.25,1.47,1.83,2.34,2.64,3.25,4.15,4.78,5.49,6.15,6.77,7.46,8.2,9.0,9.8,10.6,11.4,12.15,12.75,13.35,10.35],"qtrs":3,"lastQ":3.45,"priorQ":3.3,"ttmOverride":null,"pub":{"cik":"0000936468","rate":3.6,"rateSrc":"stockanalysis.com dividend history (declared, ex-date Dec 1 2026)","lastQ":3.45,"priorQ":3.3,"d2025":13.35,"ytd2026":10.35,"n2026":3,"secEps":27.13,"secPeriod":"Q3'25\u2013Q2'26","secCurrent":false,"secSrc":"","secNote":null}},{"n":7,"name":"Lowe's Companies, Inc.","t":"LOW","price":227.24,"shares":477,"pe":19.2,"yld":2.2,"peg":2.7,"payout":10.6,"egr":-0.4,"beta":0.9,"roe":32.81,"cfdiv":5.2,"qrev":-13.8,"sector":"Consumer Discretionary","div":[0.04,0.05,0.08,0.1,0.16,0.26,0.34,0.36,0.4,0.5,0.6,0.68,0.82,1.02,1.26,1.52,1.78,2.06,2.25,2.8,3.7,4.3,4.5,4.7,3.65],"qtrs":3,"lastQ":1.25,"priorQ":1.2,"ttmOverride":null,"pub":{"cik":"0000060667","rate":1.25,"rateSrc":"stockanalysis.com dividend history","lastQ":1.25,"priorQ":1.2,"d2025":4.7,"ytd2026":4.9,"n2026":4,"secEps":11.83,"secPeriod":"fiscal qtrs to Jul 31 2026","secCurrent":true,"secSrc":"latest reported fiscal quarter","secNote":null}},{"n":8,"name":"Manulife Financial Corporation","t":"MFC","price":43.99,"shares":6502,"pe":17.4,"yld":3.2,"peg":null,"payout":14.3,"egr":-6.0,"beta":0.9,"roe":11.08,"cfdiv":13.1,"qrev":28.2,"sector":"Financials","div":[0.3,0.4,0.45,0.56,0.65,0.84,0.95,0.67,0.51,0.52,0.52,0.51,0.52,0.52,0.55,0.63,0.71,0.76,0.83,0.93,1.02,1.08,1.6,1.25,1.06],"qtrs":3,"lastQ":null,"priorQ":null,"ttmOverride":0.1503,"pub":{"cik":"0001086888","rate":0.35212,"rateSrc":"stockanalysis.com dividend history (USD value of CAD dividend)","lastQ":0.35212,"priorQ":0.31767,"d2025":1.24804,"ytd2026":1.05741,"n2026":3,"secEps":null,"secPeriod":null,"secCurrent":false,"secSrc":"","secNote":"Foreign filer (40-F, IFRS): no quarterly us-gaap EPS"}},{"n":9,"name":"Altria Group, Inc.","t":"MO","price":77.58,"shares":2610,"pe":16.0,"yld":5.8,"peg":3.1,"payout":26.7,"egr":32.5,"beta":0.4,"roe":67.39,"cfdiv":1.7,"qrev":-5.1,"sector":"Consumer Staples","div":[2.44,2.64,2.82,3.06,3.32,3.91,2.43,1.32,1.46,1.58,1.7,1.84,2.0,2.18,2.36,2.54,3.0,3.28,3.4,3.52,3.68,3.84,4.0,4.16,3.23],"qtrs":3,"lastQ":1.11,"priorQ":1.06,"ttmOverride":null,"pub":{"cik":"0000764180","rate":1.11,"rateSrc":"stockanalysis.com dividend history","lastQ":1.11,"priorQ":1.06,"d2025":4.16,"ytd2026":3.23,"n2026":3,"secEps":4.75,"secPeriod":"Q3'25\u2013Q2'26","secCurrent":false,"secSrc":"","secNote":null}},{"n":10,"name":"Monolithic Power Systems, Inc.","t":"MPWR","price":1131.43,"shares":95,"pe":62.4,"yld":0.7,"peg":1.0,"payout":15.7,"egr":26.3,"beta":1.8,"roe":19.17,"cfdiv":2.9,"qrev":12.6,"sector":"Information Technology","div":[0,0,0,0,0,0,0,0,0,0,1.0,0,0.45,0.8,0.8,0.8,1.2,1.6,2.0,2.4,3.0,4.0,5.0,6.24,6.0],"qtrs":3,"lastQ":2.0,"priorQ":1.56,"ttmOverride":null,"pub":{"cik":"0001280452","rate":2.0,"rateSrc":"stockanalysis.com dividend history","lastQ":2.0,"priorQ":1.56,"d2025":6.24,"ytd2026":6.0,"n2026":3,"secEps":16.38,"secPeriod":"Q3'25\u2013Q2'26","secCurrent":false,"secSrc":"","secNote":null}},{"n":11,"name":"Nexstar Media Group, Inc.","t":"NXST","price":187.97,"shares":583,"pe":17.1,"yld":3.9,"peg":null,"payout":62.3,"egr":-37.0,"beta":0.9,"roe":4.26,"cfdiv":11.8,"qrev":12.2,"sector":"Communication Services","div":[0,0,0,0,0,0,0,0,0,0,0,0.48,0.6,0.76,0.96,1.2,1.52,1.8,2.24,2.8,3.6,5.4,6.76,7.44,5.58],"qtrs":3,"lastQ":1.86,"priorQ":1.86,"ttmOverride":null,"pub":{"cik":"0001142417","rate":1.86,"rateSrc":"stockanalysis.com dividend history","lastQ":1.86,"priorQ":1.86,"d2025":7.44,"ytd2026":5.58,"n2026":3,"secEps":5.27,"secPeriod":"Q3'25\u2013Q2'26","secCurrent":false,"secSrc":"","secNote":null}},{"n":12,"name":"ONEOK, Inc.","t":"OKE","price":86.25,"shares":1306,"pe":13.4,"yld":5.0,"peg":2.1,"payout":19.9,"egr":12.8,"beta":0.8,"roe":17.17,"cfdiv":2.0,"qrev":-17.2,"sector":"Energy","div":[0.28,0.29,0.38,0.47,0.53,0.62,0.7,0.72,0.79,0.96,1.12,1.3,2.13,2.45,2.48,2.74,3.26,3.54,3.76,3.76,3.76,3.84,3.96,4.12,3.21],"qtrs":3,"lastQ":1.07,"priorQ":1.03,"ttmOverride":null,"pub":{"cik":"0001039684","rate":1.07,"rateSrc":"stockanalysis.com dividend history","lastQ":1.07,"priorQ":1.03,"d2025":4.12,"ytd2026":4.28,"n2026":4,"secEps":5.8,"secPeriod":"Q3'25\u2013Q2'26","secCurrent":false,"secSrc":"","secNote":null}},{"n":13,"name":"Philip Morris International Inc.","t":"PM","price":201.5,"shares":910,"pe":29.4,"yld":3.2,"peg":2.5,"payout":22.0,"egr":5.7,"beta":0.5,"roe":37.76,"cfdiv":2.1,"qrev":-4.7,"sector":"Consumer Staples","div":[0,0,0,0,0,0,1.54,2.24,2.44,2.82,2.52,3.58,3.88,4.04,4.12,4.22,4.49,4.62,4.74,4.9,5.04,5.14,5.3,5.64,4.54],"qtrs":3,"lastQ":1.6,"priorQ":1.47,"ttmOverride":null,"pub":{"cik":"0001413329","rate":1.6,"rateSrc":"stockanalysis.com dividend history","lastQ":1.6,"priorQ":1.47,"d2025":5.64,"ytd2026":4.54,"n2026":3,"secEps":6.95,"secPeriod":"Q3'25\u2013Q2'26","secCurrent":false,"secSrc":"","secNote":null}},{"n":14,"name":"Unum Group","t":"UNM","price":73.95,"shares":2809,"pe":52.6,"yld":2.6,"peg":0.8,"payout":10.6,"egr":1.5,"beta":0.8,"roe":6.69,"cfdiv":7.0,"qrev":17.1,"sector":"Financials","div":[0.6,0.39,0.32,0.32,0.32,0.32,0.32,0.32,0.34,0.4,0.48,0.56,0.64,0.72,0.78,0.86,0.98,1.1,1.16,1.18,1.26,1.4,1.58,1.76,1.43],"qtrs":3,"lastQ":0.505,"priorQ":0.46,"ttmOverride":null,"pub":{"cik":"0000005513","rate":0.505,"rateSrc":"stockanalysis.com dividend history","lastQ":0.505,"priorQ":0.46,"d2025":1.76,"ytd2026":1.425,"n2026":3,"secEps":4.31,"secPeriod":"Q3'25\u2013Q2'26","secCurrent":false,"secSrc":"","secNote":null}},{"n":15,"name":"Exxonmobil Holdings Corporation","t":"XOM","price":165.3,"shares":1100,"pe":17.0,"yld":2.6,"peg":1.0,"payout":15.1,"egr":5.6,"beta":0.6,"roe":11.03,"cfdiv":5.8,"qrev":3.5,"sector":"Energy","div":[0.92,0.98,1.06,1.14,1.28,1.37,1.55,1.66,1.74,1.85,2.18,2.46,2.7,2.88,2.98,3.06,3.23,3.43,3.48,3.49,3.55,3.68,3.84,4.0,3.09],"qtrs":3,"lastQ":1.03,"priorQ":0.99,"ttmOverride":null,"pub":{"cik":"0002115436","rate":1.07,"rateSrc":"SEC 8-K, Oct 30 2026: $1.07, payable Dec 10 2026","lastQ":1.03,"priorQ":0.99,"d2025":4.0,"ytd2026":3.09,"n2026":3,"secEps":9.72,"secPeriod":"Q4'25\u2013Q3'26","secCurrent":true,"secSrc":"FY2025 less 9M 2025, plus 9M 2026 (8-K, Oct 30 2026)","secNote":null}},{"n":16,"name":"Enterprise Products Partners L.P.","t":"EPD","price":36.62,"shares":6395,"pe":12.2,"yld":6.0,"peg":3.0,"payout":21.0,"egr":6.0,"beta":0.6,"roe":19.7,"cfdiv":1.8,"qrev":-11.5,"sector":"Energy","div":[0.67,0.72,0.77,0.84,0.9,0.96,1.02,1.09,1.14,1.21,1.27,1.36,1.44,1.52,1.6,1.67,1.72,1.76,1.8,1.8,1.9,1.98,2.1,2.16,1.66],"qtrs":3,"lastQ":0.56,"priorQ":0.545,"ttmOverride":null,"pub":{"cik":"0001061219","rate":0.56,"rateSrc":"stockanalysis.com dividend history","lastQ":0.56,"priorQ":0.545,"d2025":2.16,"ytd2026":2.22,"n2026":4,"secEps":null,"secPeriod":null,"secCurrent":false,"secSrc":"","secNote":"Partnership: no us-gaap EarningsPerShareDiluted tag in XBRL"}},{"n":17,"name":"MPLX LP","t":"MPLX","price":55.339,"shares":3864,"pe":13.2,"yld":8.7,"peg":null,"payout":25.0,"egr":13.9,"beta":0.6,"roe":34.96,"cfdiv":1.4,"qrev":4.6,"sector":"Energy","div":[0,0,0,0,0,0,0,0,0,0,0,1.04,1.34,1.7,2.04,2.21,2.5,2.66,2.76,3.35,2.91,3.19,3.51,3.95,3.23],"qtrs":3,"lastQ":null,"priorQ":null,"ttmOverride":0.12539999999999998,"pub":{"cik":"0001552000","rate":1.2111,"rateSrc":"SEC 8-K, Oct 27 2026: $1.2111, up 12.5%","lastQ":1.0765,"priorQ":0.9565,"d2025":3.946,"ytd2026":3.2295,"n2026":3,"secEps":null,"secPeriod":null,"secCurrent":false,"secSrc":"","secNote":"Partnership: no us-gaap EarningsPerShareDiluted tag in XBRL"}},{"n":18,"name":"JPMorgan Chase & Co.","t":"JPM","price":337.34,"shares":230,"pe":14.2,"yld":2.0,"peg":1.2,"payout":7.7,"egr":6.8,"beta":0.9,"roe":16.06,"cfdiv":9.1,"qrev":-33.5,"sector":"Financials","div":[1.36,1.36,1.36,1.36,1.36,1.44,1.52,0.53,0.2,0.8,1.15,1.36,1.56,1.68,1.84,2.04,2.48,3.3,3.6,3.7,4.0,4.05,4.6,5.55,6.15],"qtrs":4,"lastQ":1.65,"priorQ":1.5,"ttmOverride":null,"pub":{"cik":"0000019617","rate":1.65,"rateSrc":"stockanalysis.com dividend history","lastQ":1.65,"priorQ":1.5,"d2025":5.55,"ytd2026":6.15,"n2026":4,"secEps":23.85,"secPeriod":"Q4'25\u2013Q3'26","secCurrent":true,"secSrc":"10-Q filed Nov 3 2026","secNote":null}},{"n":19,"name":"Valero Energy Corporation","t":"VLO","price":351.23,"shares":395,"pe":7.9,"yld":1.4,"peg":null,"payout":14.3,"egr":35.2,"beta":0.7,"roe":9.71,"cfdiv":20.3,"qrev":-10.3,"sector":"Energy","div":[0.09,0.09,0.13,0.19,0.26,0.44,0.53,0.56,0.2,0.29,0.6,0.84,1.06,1.7,2.4,2.8,3.2,3.6,3.92,3.92,3.92,4.08,4.28,4.52,3.6],"qtrs":3,"lastQ":1.2,"priorQ":1.13,"ttmOverride":null,"pub":{"cik":"0001035002","rate":1.2,"rateSrc":"stockanalysis.com dividend history","lastQ":1.2,"priorQ":1.13,"d2025":4.52,"ytd2026":3.6,"n2026":3,"secEps":24.03,"secPeriod":"Q3'25\u2013Q2'26","secCurrent":false,"secSrc":"","secNote":null}},{"n":20,"name":"Brookfield Infrastructure Partners L.P.","t":"BIP","price":37.81,"shares":4150,"pe":63.0,"yld":4.6,"peg":null,"payout":65.7,"egr":-5.5,"beta":0.8,"roe":7.99,"cfdiv":7.2,"qrev":-65.4,"sector":"Utilities","div":[0,0,0,0,0,0,0.35,0.42,0.44,0.52,0.6,0.68,0.76,0.84,0.92,1.04,1.12,1.2,1.29,1.36,1.44,1.533,1.62,1.72,1.37],"qtrs":3,"lastQ":0.455,"priorQ":0.43,"ttmOverride":null,"pub":{"cik":"0001406234","rate":0.455,"rateSrc":"stockanalysis.com dividend history","lastQ":0.455,"priorQ":0.43,"d2025":1.72,"ytd2026":1.365,"n2026":3,"secEps":null,"secPeriod":null,"secCurrent":false,"secSrc":"","secNote":"Foreign filer (20-F, IFRS): no quarterly us-gaap EPS"}}],"shown":{"histTotal":[0.44,0.47,0.5,0.56,0.62,0.71,0.77,0.74,0.77,0.9,1.07,1.42,1.62,1.87,2.05,2.23,2.56,2.82,3.06,3.54,3.98,4.26,4.35,4.43,3.69],"histPct":[6.5,6.7,12.0,11.1,14.3,8.4,-3.8,3.0,17.4,18.7,32.8,14.6,15.5,9.3,8.6,15.1,10.2,8.3,15.9,12.4,7.0,2.0,1.9,-16.7],"expTot":4.94,"expPct":11.5,"fpTotals":{"mv":3121188,"pct":100.0,"pe":25.7,"yld":3.7,"wy":3.7,"peg":1.8,"dgr1":7.4,"dgr3":5.4,"dgr5":7.6,"payout":23.9,"egr":4.0,"beta":0.7,"roe":788.4,"cfdiv":5.9,"qrev":-3.6},"histRight":{"ABBV":[5.49,3.5,4.8,6.79],"AMGN":[5.88,3.8,6.2,9.88],"BBY":[1.05,1.1,6.3,3.84],"CI":[3.31,7.1,8.6,6.47],"EOG":[4.62,6.0,19.7,4.19],"LMT":[4.55,3.2,4.7,13.78],"LOW":[4.17,3.0,10.9,4.84],"MFC":[15.03,5.0,6.1,1.31],"MO":[4.72,2.7,3.4,4.27],"MPWR":[28.21,16.0,21.1,7.24],"NXST":[0.0,11.3,21.6,8.28],"OKE":[3.88,2.4,1.8,4.22],"PM":[8.84,3.1,2.9,5.82],"UNM":[9.78,7.9,8.3,1.9],"XOM":[4.04,2.8,2.8,4.11],"EPD":[2.75,2.9,3.7,2.22],"MPLX":[12.54,7.4,3.3,4.24],"JPM":[10.0,11.1,8.4,6.16],"VLO":[6.19,3.5,2.9,4.68],"BIP":[5.81,3.9,4.8,1.79]}},"mfc2024Public":1.1694};
+const YEARS = DATA.years;
+const iY = y => YEARS.indexOf(y);
+const STORE_KEY = "pdg-2026q3-state-v2";
 
-let state = {
-  workerUrl: DEFAULT_WORKER_URL,
-  portfolios: {},           // { name: { tickers: [{symbol}] } }
-  activePortfolio: null,
-  lastData: null,
-  lastUpdated: null,
-};
+/* ---------- state ---------- */
+const state = { sheet:"fp", sel:{fp:{r:11,c:11}, hist:{r:5,c:28}}, anchor:{fp:null,hist:null}, edits:{}, totalMode:"workbook", editing:null, dragging:false };
+try { const s = JSON.parse(localStorage.getItem(STORE_KEY) || "{}"); if (s && typeof s === "object"){ state.edits = s.edits || {}; if (s.totalMode==="calc") state.totalMode = "calc"; } } catch(e) {}
+function saveEdits(){ try { localStorage.setItem(STORE_KEY, JSON.stringify({edits:state.edits,totalMode:state.totalMode})); } catch(e) {} }
 
-function loadState() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      state = { ...state, ...parsed };
-    }
-  } catch (e) { console.error('Load error', e); }
-  if (Object.keys(state.portfolios).length === 0) {
-    state.portfolios = { 'Default': { tickers: [] } };
-    state.activePortfolio = 'Default';
-  }
-  if (!state.activePortfolio || !state.portfolios[state.activePortfolio]) {
-    state.activePortfolio = Object.keys(state.portfolios)[0];
-  }
-}
+/* ---------- formatting ---------- */
+const nf = (v,d) => Number(v).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const money = (v,d=2) => (v<0?"-$":"$") + nf(Math.abs(v),d);
+const pct = (v,d=1) => nf(v*100,d) + "%";
+const num = (v,d=1) => nf(v,d);
+const r2 = v => Math.round(v*1e9)/1e9; // trims float noise before display rounding
+const plain = (v,d) => Number(v).toFixed(d);
+const moneyS = v => { const d = Math.abs(v*100 - Math.round(v*100)) < 1e-6 ? 2 : 4; return money(v,d); };
 
-function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({
-    workerUrl: state.workerUrl,
-    portfolios: state.portfolios,
-    activePortfolio: state.activePortfolio,
-    lastUpdated: state.lastUpdated,
-  }));
-}
-
-/* ============================================================
-   UI RENDERING — setup
-   ============================================================ */
-function renderPortfolioSelect() {
-  const sel = document.getElementById('portfolioSelect');
-  sel.innerHTML = '';
-  for (const name of Object.keys(state.portfolios)) {
-    const opt = document.createElement('option');
-    opt.value = name; opt.textContent = name;
-    if (name === state.activePortfolio) opt.selected = true;
-    sel.appendChild(opt);
-  }
-}
-
-function renderTickerBox() {
-  const p = state.portfolios[state.activePortfolio];
-  const box = document.getElementById('tickersInput');
-  if (!p) { box.value = ''; return; }
-  box.value = p.tickers.map(t => t.symbol).join('\n');
-  updateMasthead();
-}
-
-function updateMasthead() {
-  const p = state.portfolios[state.activePortfolio];
-  document.getElementById('displayPortfolio').textContent = state.activePortfolio || '—';
-  document.getElementById('displayHoldings').textContent = `${p ? p.tickers.length : 0} holdings`;
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-  document.getElementById('displayDate').textContent = dateStr;
-  if (state.lastUpdated) {
-    const ud = new Date(state.lastUpdated);
-    document.getElementById('lastUpdate').textContent = `Last updated: ${ud.toLocaleString()}`;
-  }
-}
-
-/* ============================================================
-   PORTFOLIO MGMT
-   ============================================================ */
-function parseTickerBox() {
-  const text = document.getElementById('tickersInput').value;
-  return text.split(/\r?\n/).map(line => {
-    const sym = line.trim().split(/\s+/)[0];
-    if (!sym) return null;
-    return { symbol: sym.toUpperCase() };
-  }).filter(Boolean);
-}
-
-function savePortfolio() {
-  const tickers = parseTickerBox();
-  state.portfolios[state.activePortfolio] = { tickers };
-  saveState();
-  flashStatus(`Portfolio "${state.activePortfolio}" saved — ${tickers.length} holdings.`, 'success');
-  updateMasthead();
-}
-
-function switchPortfolio() {
-  state.activePortfolio = document.getElementById('portfolioSelect').value;
-  saveState();
-  renderTickerBox();
-  document.getElementById('resultsCard').style.display = 'none';
-  state.lastData = null;
-}
-
-function newPortfolio() {
-  openModal('New Portfolio', 'Name for the new portfolio (e.g. a client\'s first name):', '', (name) => {
-    name = (name || '').trim();
-    if (!name) return;
-    if (state.portfolios[name]) { alert('A portfolio with that name already exists.'); return; }
-    state.portfolios[name] = { tickers: [] };
-    state.activePortfolio = name;
-    saveState();
-    renderPortfolioSelect();
-    renderTickerBox();
-    document.getElementById('tickersInput').focus();
+/* ---------- model ---------- */
+function compute(){
+  const H = DATA.holdings.map(h => {
+    const e = state.edits[h.t] || {};
+    return Object.assign({}, h, { price: e.price ?? h.price, shares: e.shares ?? h.shares,
+      editedPrice: e.price != null, editedShares: e.shares != null });
   });
-}
-
-function renamePortfolio() {
-  openModal('Rename Portfolio', 'New name:', state.activePortfolio, (newName) => {
-    newName = (newName || '').trim();
-    if (!newName || newName === state.activePortfolio) return;
-    if (state.portfolios[newName]) { alert('That name is already taken.'); return; }
-    state.portfolios[newName] = state.portfolios[state.activePortfolio];
-    delete state.portfolios[state.activePortfolio];
-    state.activePortfolio = newName;
-    saveState();
-    renderPortfolioSelect();
-    updateMasthead();
+  H.forEach(h => h.mv = h.price * h.shares);
+  const mvTot = H.reduce((a,h)=>a+h.mv,0);
+  const i25=iY(2025), i23=iY(2023), i21=iY(2021);
+  H.forEach(h => {
+    h.w = h.mv / mvTot;
+    h.wy = h.w * h.yld;
+    h.ttm = h.ttmOverride != null ? h.ttmOverride : (h.lastQ - h.priorQ) / h.priorQ;
+    h.g3 = h.div[i23] > 0 ? Math.pow(h.div[i25]/h.div[i23], 1/3) - 1 : null;
+    h.g5 = h.div[i21] > 0 ? Math.pow(h.div[i25]/h.div[i21], 1/5) - 1 : null;
+    h.exp = h.div[i25] * (1 + (h.g3 || 0));
   });
+  const wsum = k => r2(H.reduce((a,h)=>a + h.w*h[k], 0));
+  const avg = k => { const v = H.map(h=>h[k]).filter(x=>x!=null); return r2(v.reduce((a,b)=>a+b,0)/v.length); };
+  const T = {
+    mv: mvTot, w: H.reduce((a,h)=>a+h.w,0), pe: wsum("pe"), yld: wsum("yld"), wy: r2(H.reduce((a,h)=>a+h.wy,0)),
+    peg: avg("peg"), ttm: wsum("ttm"), g3: avg("g3"), g5: avg("g5"), payout: avg("payout"), egr: avg("egr"),
+    beta: wsum("beta"), roe: avg("roe"), cfdiv: avg("cfdiv"), qrev: avg("qrev")
+  };
+  const histTot = YEARS.map((y,i) => H.reduce((a,h)=>a + h.w*h.div[i], 0));
+  const histPct = YEARS.map((y,i) => i===0 || histTot[i-1]===0 ? null : (histTot[i]/histTot[i-1]-1)*100);
+  const qtrsPct = H.reduce((a,h)=>a+h.qtrs,0) / (4*H.length);
+  const expTotCalc = H.reduce((a,h)=>a + h.w*h.exp, 0);
+  const mode = Object.keys(state.edits).length ? "calc" : state.totalMode;
+  const showTot = mode==="workbook" ? DATA.shown.histTotal.slice() : histTot;
+  const showPct = mode==="workbook" ? [null].concat(DATA.shown.histPct) : histPct;
+  const expTot = mode==="workbook" ? DATA.shown.expTot : expTotCalc;
+  const expPct = mode==="workbook" ? DATA.shown.expPct : (expTotCalc / histTot[i25] - 1) * 100;
+  return { H, T, histTot:showTot, histPct:showPct, histTotCalc:histTot, mode, qtrsPct, expTot, expPct, expTotCalc };
 }
 
-function saveWorkerUrl() {
-  const raw = document.getElementById('workerUrl').value.trim();
-  const cleaned = raw.replace(/\/$/, '');
-  if (cleaned && !/^https?:\/\//i.test(cleaned)) {
-    flashStatus('Worker URL should start with https://', 'error');
-    return;
-  }
-  state.workerUrl = cleaned;
-  saveState();
-  updateWorkerStatus();
-  flashStatus('Worker URL saved to this device.', 'success');
+/* ---------- sheet definitions ---------- */
+const FP_COLS = [
+  ["A",30],["B",296],["C",62],["D",88],["E",66],["F",92],["G",64],["H",50],["J",50],["K",124],["L",108],
+  ["M",66],["N",62],["O",62],["P",104],["U",62],["V",66],["X",96],["Y",142],["AB",102],["AE",206]
+].map(([k,w])=>({k,w}));
+const YEAR_LETTERS = ["E","G","I","K","M","O","Q","S","U","W","Y","AA","AC","AE","AG","AI","AK","AM","AO","AQ","AS","AU","AW","AY","BA"];
+const HIST_COLS = [["C",70],["D",70]].concat(YEAR_LETTERS.map(k=>[k,64])).concat([["BC",120],["BD",80],["BE",64],["BF",64],["BG",72]]).map(([k,w])=>({k,w}));
+const colOfYear = y => YEAR_LETTERS[iY(y)];
+function frozenCount(sheet){ return sheet==="hist" ? 2 : (window.innerWidth >= 900 ? 2 : 0); }
+
+const SRC_FS = "Source: FactSet field, workbook snapshot 11/05/2026.";
+function fpCells(m){
+  const C = {};
+  const put = (addr, cell) => C[addr] = cell;
+  put("B1",{t:"November 05, 2026 Prices",cls:"b c fy",src:"Price date for this report."});
+  put("B2",{t:"November 05, 2026 Data",cls:"b c fo",src:"Data date for this report."});
+  [["M3","1-yr"],["N3","3-yr"],["O3","5-yr"],["U3","5-yr"],["V3","5-yr"],["AB3","3-mos"]].forEach(([a,t])=>put(a,{t,cls:"b c"}));
+  const hdr = {B:"Company",C:"Ticker",D:"Price",E:"# of\nShares",F:"Market\nValue",G:"%",H:"P/E",J:"Yield",K:"Weighted Yield",L:"PEG\nCurrent Year",M:"DGR",N:"DGR",O:"DGR",P:"Dividend\nPayout\nRatio",U:"EGR",V:"Beta",X:"ROE",Y:"CashFlow:Dividend",AB:"QTR Rev Gr.",AE:"GICS Sector"};
+  Object.entries(hdr).forEach(([k,t])=>put(k+"4",{t,cls:"hdr"}));
+  m.H.forEach((h,i)=>{
+    const r = 5+i, hr = 5+i;
+    put("A"+r,{t:String(h.n),cls:"r"});
+    put("B"+r,{t:h.name,cls:"l",src:"Company name."});
+    put("C"+r,{t:h.t,cls:"c",src:"Ticker."});
+    put("D"+r,{t:money(h.price,2),v:h.price,cls:"r"+(h.editedPrice?" edited":""),edit:"price",fv:String(h.price),
+      src:(h.editedPrice?"Edited price. ":"Closing price 11/05/2026 (workbook). ")+"Double-click to change."});
+    put("E"+r,{t:nf(h.shares,0),v:h.shares,cls:"c"+(h.editedShares?" edited":""),edit:"shares",fv:String(h.shares),
+      src:(h.editedShares?"Edited share count. ":"Client holding (workbook). ")+"Double-click to change."});
+    put("F"+r,{t:money(h.mv,0),v:h.mv,cls:"r",f:`=D${r}*E${r}`});
+    put("G"+r,{t:pct(h.w,1),v:h.w,cls:"r",f:`=F${r}/$F$25`});
+    put("H"+r,{t:num(h.pe,1),v:h.pe,cls:"r",fv:String(h.pe),src:SRC_FS+pubPE(h)});
+    put("J"+r,{t:num(h.yld,1),v:h.yld,cls:"r",fv:String(h.yld),src:SRC_FS+pubYield(h)});
+    put("K"+r,{t:num(r2(h.wy),1),v:h.wy,cls:"c",f:`=G${r}*J${r}`});
+    put("L"+r,h.peg==null?{t:"#N/A",cls:"c na",fv:"#N/A",src:SRC_FS+" FactSet has no current-year PEG for this name."}:{t:num(h.peg,1),v:h.peg,cls:"c",fv:String(h.peg),src:SRC_FS});
+    put("M"+r,{t:pct(r2(h.ttm),1),v:h.ttm,frac:true,cls:"r",fv:Number((h.ttm*100).toPrecision(15))+"%",src:`Value in the workbook, not a formula. It equals 'Historical Data'!BD${hr}.`});
+    put("N"+r,{t:pct(r2(h.g3),1),v:h.g3,cls:"r",f:`='Historical Data'!BE${hr}`});
+    put("O"+r,{t:pct(r2(h.g5),1),v:h.g5,cls:"r",f:`='Historical Data'!BF${hr}`});
+    put("P"+r,{t:num(h.payout,1)+"%",v:h.payout,cls:"c",fv:h.payout+"%",src:SRC_FS});
+    put("U"+r,{t:num(h.egr,1),v:h.egr,cls:"c",fv:String(h.egr),src:SRC_FS+" 5-year EPS growth rate."});
+    put("V"+r,{t:num(h.beta,1),v:h.beta,cls:"c",fv:String(h.beta),src:SRC_FS+" 5-year beta."});
+    put("X"+r,{t:plain(h.roe,2)+"%",v:h.roe,cls:"c",fv:h.roe+"%",src:SRC_FS});
+    put("Y"+r,{t:num(h.cfdiv,1),v:h.cfdiv,cls:"c",fv:String(h.cfdiv),src:SRC_FS+" Cash flow ÷ dividends."});
+    put("AB"+r,{t:num(h.qrev,1)+"%",v:h.qrev,cls:"r",fv:h.qrev+"%",src:SRC_FS+" Quarterly revenue growth."});
+    put("AE"+r,{t:h.sector,cls:"l",src:"GICS sector."});
+  });
+  const T = m.T, B = "b u ";
+  put("B25",{t:"Total:",cls:"l ind"});
+  put("F25",{t:money(T.mv,0),v:T.mv,cls:B+"r",f:"=SUM(F5:F24)"});
+  put("G25",{t:pct(r2(T.w),1),v:T.w,cls:B+"r",f:"=SUM(G5:G24)"});
+  put("H25",{t:num(T.pe,1),v:T.pe,cls:B+"r",f:"=SUMPRODUCT($G$5:$G$24,H5:H24)"});
+  put("J25",{t:num(T.yld,1),v:T.yld,cls:B+"r",f:"=SUMPRODUCT($G$5:$G$24,J5:J24)"});
+  put("K25",{t:num(T.wy,1),v:T.wy,cls:B+"c",f:"=SUM(K5:K24)"});
+  put("L25",{t:num(T.peg,1),v:T.peg,cls:B+"c",f:"=AVERAGE(L5:L24)   (rows with #N/A are skipped)"});
+  put("M25",{t:pct(T.ttm,1),v:T.ttm,cls:B+"r",f:"=SUMPRODUCT($G$5:$G$24,M5:M24)"});
+  put("N25",{t:pct(T.g3,1),v:T.g3,cls:B+"r",f:"=AVERAGE(N5:N24)"});
+  put("O25",{t:pct(T.g5,1),v:T.g5,cls:B+"r",f:"=AVERAGE(O5:O24)"});
+  put("P25",{t:num(T.payout,1)+"%",v:T.payout,cls:B+"c",f:"=AVERAGE(P5:P24)"});
+  put("U25",{t:num(T.egr,1)+"%",v:T.egr,cls:B+"c",f:"=AVERAGE(U5:U24)"});
+  put("V25",{t:num(T.beta,1),v:T.beta,cls:B+"c",f:"=SUMPRODUCT($G$5:$G$24,V5:V24)"});
+  put("X25",{t:plain(T.roe,1)+"%",v:T.roe,cls:B+"c",f:"=AVERAGE(X5:X24)"});
+  put("Y25",{t:num(T.cfdiv,1),v:T.cfdiv,cls:B+"c",f:"=AVERAGE(Y5:Y24)"});
+  put("AB25",{t:num(T.qrev,1)+"%",v:T.qrev,cls:B+"r",f:"=AVERAGE(AB5:AB24)"});
+  return { cols:FP_COLS, rows:33, rowH:{4:66}, cells:C };
 }
 
-async function testWorker() {
-  const url = document.getElementById('workerUrl').value.trim().replace(/\/$/, '');
-  if (!url) { flashStatus('Paste a Worker URL first.', 'error'); return; }
-  flashStatus('Testing worker…', '');
-  try {
-    const r = await fetch(`${url}/test`);
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data = await r.json();
-    if (data.ok) {
-      flashStatus('✓ Worker is live and responding.', 'success');
-      // Also save it if it works
-      state.workerUrl = url;
-      saveState();
-      updateWorkerStatus();
-    } else {
-      flashStatus('Worker responded but returned an unexpected payload.', 'error');
+function histCells(m){
+  const C = {};
+  const put = (addr, cell) => C[addr] = cell;
+  put("BG1",{t:"DGR",cls:"b c"}); put("BG2",{t:"2026",cls:"b c"});
+  put("E3",{t:"Dividends Paid in Calendar Years Ending:",cls:"b u fo l",span:YEAR_LETTERS.length+1,pad:true,
+    src:"Dividend amounts are grouped by ex-dividend date in each calendar year. 2026 is year-to-date."});
+  put("BD3",{t:"TTM",cls:"b u c"}); put("BE3",{t:"3-yr",cls:"b c"}); put("BF3",{t:"5-yr",cls:"b c"}); put("BG3",{t:"Exp",cls:"b c"});
+  put("C4",{t:"Ticker",cls:"b u c"}); put("D4",{t:"Weight",cls:"b u c"});
+  YEARS.forEach(y=>put(colOfYear(y)+"4",{t:String(y),cls:"b u c"}));
+  put("BC4",{t:"CY Qtrs Paid",cls:"b u c"});
+  ["BD","BE","BF"].forEach(k=>put(k+"4",{t:"DGR",cls:"b u c"})); put("BG4",{t:"Div",cls:"b u c"});
+  m.H.forEach((h,i)=>{
+    const r = 5+i, fr = 5+i, last = i===m.H.length-1, first = i===0;
+    put("C"+r,{t:h.t,cls:"c",f:`='Final Portfolio'!C${fr}`});
+    put("D"+r,{t:pct(h.w,0),v:h.w,cls:"c",f:`='Final Portfolio'!G${fr}`});
+    YEARS.forEach((y,j)=>put(colOfYear(y)+r,{t:money(h.div[j],2),v:h.div[j],cls:"c",fv:String(h.div[j]),
+      src:y===2026?`2026 year-to-date: ${h.qtrs} dividend(s) by ex-date in the workbook data (FactSet Dividend Downloader).`:`Dividends with ex-dates in ${y} (FactSet Dividend Downloader, workbook).`}));
+    put("BC"+r,{t:String(h.qtrs),v:h.qtrs,cls:"c",fv:String(h.qtrs),src:"Dividends counted in 2026 so far (workbook)."});
+    const ttmF = h.ttmOverride!=null
+      ? `=(INDIRECT("'[Dividend Downloader.xlsm]${h.t}'!$F$2")-INDIRECT("…$F$6"))/INDIRECT("…$F$6")`
+      : `=(Latest qtr − Same qtr last year) / Same qtr last year   = (${money(h.lastQ,h.lastQ<1?3:2)} − ${money(h.priorQ,h.priorQ<1?3:2)}) / ${money(h.priorQ,h.priorQ<1?3:2)}`;
+    const box = (first?" box-t":"");
+    put("BD"+r,{t:pct(h.ttm,2),v:h.ttm,cls:"r ft box-l"+box,f:ttmF,src:h.ttmOverride!=null?"Workbook value. The quarterly inputs from Dividend Downloader.xlsm are not in the photo.":"Quarterly dividends from public dividend records match the workbook value."});
+    put("BE"+r,{t:pct(r2(h.g3),1),v:h.g3,cls:"r ft"+box,f:`=(AY${r}/AU${r})^(1/3)-1`});
+    put("BF"+r,{t:pct(r2(h.g5),1),v:h.g5,cls:"r ft"+box,f:`=(AY${r}/AQ${r})^(1/5)-1`});
+    put("BG"+r,{t:money(h.exp,2),v:h.exp,cls:"r fg box-l",f:`=AY${r}*(1+BE${r})`});
+    if (last){ ["BD","BE","BF","BG"].forEach(k=>C[k+r].cls+=" box-b"); }
+  });
+  const n = m.H.length, tr = 5+n;
+  put("D"+tr,{t:pct(m.H.reduce((a,h)=>a+h.w,0),0),cls:"c",f:`=SUM(D5:D${tr-1})`});
+  const wb = m.mode==="workbook";
+  YEARS.forEach((y,j)=>{ const k=colOfYear(y);
+    put(k+tr, wb ? {t:money(m.histTot[j],2),v:m.histTot[j],cls:"b u c",fv:money(m.histTot[j],2),src:`Workbook value. Weights × dividends gives ${money(m.histTotCalc[j],2)}. See Sources & Checks.`}
+                 : {t:money(m.histTot[j],2),v:m.histTot[j],cls:"b u c",f:`=SUMPRODUCT($D$5:$D$${tr-1},${k}5:${k}${tr-1})`});
+    if (j>0) { const pk = colOfYear(YEARS[j-1]);
+      put(k+(tr+2), wb ? {t:num(m.histPct[j],1),v:m.histPct[j],cls:"b u c fg",fv:num(m.histPct[j],1),src:"Workbook value."}
+                       : {t:num(m.histPct[j],1),v:m.histPct[j],cls:"b u c fg",f:`=(${k}${tr}/${pk}${tr}-1)*100`}); }
+  });
+  put("BC"+tr,{t:pct(m.qtrsPct,2),v:m.qtrsPct,cls:"c",f:`=SUM(BC5:BC${tr-1})/(4*COUNT(BC5:BC${tr-1}))`});
+  put("BG"+tr, wb ? {t:money(m.expTot,2),v:m.expTot,cls:"b u r",fv:money(m.expTot,2),src:`Workbook value, read from a partly hidden cell (".94"). Weights × expected dividends gives ${money(m.expTotCalc,2)}. Please confirm.`}
+                  : {t:money(m.expTot,2),v:m.expTot,cls:"b u r",f:`=SUMPRODUCT($D$5:$D$${tr-1},BG5:BG${tr-1})`});
+  put("BC"+(tr+2),{t:"",cls:"fg"});
+  put("BG"+(tr+2), wb ? {t:num(m.expPct,1),v:m.expPct,cls:"b u c fg",fv:num(m.expPct,1),src:`Workbook value, read from a partly hidden cell ("1…"). It equals (BG${tr}/AY${tr}-1)*100. Please confirm.`}
+                      : {t:num(m.expPct,1),v:m.expPct,cls:"b u c fg",f:`=(BG${tr}/AY${tr}-1)*100`});
+  put("C"+(tr+2),{t:"% Change:",cls:"b l"});
+  return { cols:HIST_COLS, rows:29, rowH:{}, cells:C };
+}
+
+function pubYield(h){
+  const p = h.pub, y = p.rate*4/h.price*100;
+  return ` Public check: latest declared ${money(p.rate, p.rate<1?4:2)}/qtr × 4 ÷ price = ${nf(y,2)}%.`;
+}
+function pubPE(h){
+  const p = h.pub;
+  if (p.secEps==null) return ` Public check: ${p.secNote}.`;
+  return ` Public check: SEC diluted EPS ${p.secPeriod} = ${money(p.secEps,2)} → P/E ${nf(h.price/p.secEps,1)}${p.secCurrent?"":" (latest quarter not in SEC data yet)"}.`;
+}
+
+/* ---------- rendering ---------- */
+let MODEL = null, SHEETS = null;
+const area = document.getElementById("area"), zoomer = document.getElementById("zoomer");
+function rebuild(){ MODEL = compute(); SHEETS = { fp: fpCells(MODEL), hist: histCells(MODEL) }; }
+
+function renderGrid(){
+  const S = SHEETS[state.sheet];
+  const sel = state.sel[state.sheet], anc = state.anchor[state.sheet] || sel;
+  const rr = [Math.min(sel.r,anc.r), Math.max(sel.r,anc.r)], cc = [Math.min(sel.c,anc.c), Math.max(sel.c,anc.c)];
+  const width = 42 + S.cols.reduce((a,c)=>a+c.w,0);
+  let h = `<table class="grid" style="width:${width}px" role="grid" aria-label="${state.sheet==="fp"?"Final Portfolio":"Historical Data"}"><colgroup><col style="width:42px">`;
+  S.cols.forEach(c=>h+=`<col style="width:${c.w}px">`);
+  h += `</colgroup><thead><tr><th class="corner"></th>`;
+  const nf_ = frozenCount(state.sheet), lefts = []; let acc = 42; S.cols.forEach((c,i)=>{ lefts[i]=acc; acc+=c.w; });
+  const frz = i => i < nf_ ? ` frz${i===nf_-1?" frz-last":""}` : "";
+  const frzStyle = i => i < nf_ ? `left:${lefts[i]}px;` : "";
+  S.cols.forEach((c,i)=>h+=`<th class="${(i>=cc[0]&&i<=cc[1]?"on":"")+frz(i)}"${i<nf_?` style="${frzStyle(i)}"`:""}>${c.k}</th>`);
+  h += `</tr></thead><tbody>`;
+  for (let r=1; r<=S.rows; r++){
+    const rh = S.rowH[r] || 21;
+    h += `<tr style="height:${rh}px"><th class="rowhdr${r>=rr[0]&&r<=rr[1]?" on":""}" style="height:${rh}px">${r}</th>`;
+    for (let i=0; i<S.cols.length; i++){
+      const addr = S.cols[i].k + r, cell = S.cells[addr];
+      const span = cell && cell.span ? cell.span : 1;
+      let cls = (cell ? (cell.cls||"") : "") + frz(i);
+      if (r>=rr[0]&&r<=rr[1]&&i>=cc[0]&&i<=cc[1] && !(r===sel.r&&i===sel.c)) cls += " insel";
+      if (r===sel.r && i===sel.c) cls += " active";
+      const style = (rh!==21?`height:${rh}px;`:"") + (cell&&cell.pad?"padding-left:340px;":"") + frzStyle(i);
+      const txt = cell ? esc(cell.t) : "";
+      h += `<td class="${cls.trim()}" data-r="${r}" data-c="${i}"${span>1?` colspan="${span}"`:""}${style?` style="${style}"`:""}>${txt?`<span>${txt}</span>`:""}</td>`;
+      i += span-1;
     }
-  } catch (e) {
-    flashStatus(`Worker test failed: ${e.message}. Check the URL and that the worker is deployed.`, 'error');
+    h += `</tr>`;
   }
+  h += `</tbody></table>`;
+  zoomer.innerHTML = h;
+  updateFormulaBar(); updateStats();
+}
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+
+function cellAt(sheet, r, c){ const S = SHEETS[sheet]; const k = S.cols[c].k + r; return {addr:k, cell:S.cells[k]}; }
+function updateFormulaBar(){
+  if (state.sheet==="src"){ nameBox.textContent=""; fxText.textContent=""; fxSrc.textContent=""; return; }
+  const s = state.sel[state.sheet], {addr, cell} = cellAt(state.sheet, s.r, s.c);
+  nameBox.textContent = addr;
+  fxText.textContent = cell ? (cell.f || cell.fv || cell.t || "") : "";
+  fxSrc.textContent = cell && cell.src ? cell.src : (cell && cell.f ? "Formula, calculated in this app." : "");
+}
+function updateStats(){
+  const st = document.getElementById("stats");
+  if (state.sheet==="src"){ st.textContent=""; return; }
+  const sel = state.sel[state.sheet], anc = state.anchor[state.sheet];
+  if (!anc || (anc.r===sel.r && anc.c===sel.c)){ st.textContent=""; return; }
+  const S = SHEETS[state.sheet], vals=[];
+  let count=0;
+  for (let r=Math.min(sel.r,anc.r); r<=Math.max(sel.r,anc.r); r++)
+    for (let c=Math.min(sel.c,anc.c); c<=Math.max(sel.c,anc.c); c++){
+      const cell = S.cells[S.cols[c].k + r]; if (!cell || cell.t==="") continue; count++;
+      if (typeof cell.v === "number") vals.push(cell);
+    }
+  if (!vals.length){ st.textContent = count?`Count: ${count}`:""; return; }
+  const t0 = vals[0].t, isMoney = t0.startsWith("$")||t0.startsWith("-$"), isFrac = vals[0].frac===true || (t0.endsWith("%") && Math.abs(vals[0].v) < 5 && !vals[0].fv);
+  const sum = vals.reduce((a,c)=>a+c.v,0), av = sum/vals.length;
+  const f = v => isMoney ? money(v,2) : (isFrac ? pct(v,2) : nf(v,2) + (t0.endsWith("%")?"%":""));
+  st.innerHTML = `<span>Average: ${esc(f(av))}</span><span>Count: ${count}</span><span>Sum: ${esc(f(sum))}</span>`;
 }
 
-function updateWorkerStatus() {
-  const badge = document.getElementById('workerBadge');
-  if (!badge) return;
-  if (state.workerUrl) {
-    badge.innerHTML = '<span style="color:var(--gain)">● connected</span>';
-  } else {
-    badge.innerHTML = '<span style="color:var(--loss)">● not configured</span>';
-  }
+/* ---------- sources tab ---------- */
+function renderSources(){
+  const m = MODEL, s = DATA.shown;
+  const stale = [];
+  const rows = m.H.map((h,i)=>{
+    const p = h.pub, py = p.rate*4/h.price*100;
+    const yDiff = Math.abs(Math.round(py*10)/10 - h.yld) > 0.05;
+    const ttmPub = (p.lastQ-p.priorQ)/p.priorQ, tDiff = Math.abs(ttmPub - h.ttm) > 0.0005;
+    const d25 = h.div[iY(2025)], dDiff = Math.abs(p.d2025 - d25) > 0.006;
+    const pe = p.secEps!=null ? h.price/p.secEps : null, peDiff = pe!=null && p.secCurrent && Math.abs(pe-h.pe) > 0.15;
+    const edgar = `https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=${p.cik}&type=&dateb=&owner=include&count=40`;
+    if (pe!=null && !p.secCurrent) stale.push(h.t);
+    return `<tr><td>${esc(h.t)}</td><td><a href="${edgar}" target="_blank" rel="noopener">${esc(p.cik)}</a></td>
+      <td class="n">${moneyS(p.rate)}</td><td>${esc(p.rateSrc)}</td>
+      <td class="n${yDiff?" diff":""}">${nf(py,2)}%</td><td class="n">${nf(h.yld,1)}</td>
+      <td class="n${tDiff?" diff":""}">${pct(ttmPub,2)}</td><td class="n">${pct(h.ttm,2)}</td>
+      <td class="n${dDiff?" diff":""}">${money(p.d2025,2)}</td><td class="n">${money(d25,2)}</td>
+      <td class="n">${money(p.ytd2026,2)} (${p.n2026})</td><td class="n">${money(h.div[iY(2026)],2)} (${h.qtrs})</td>
+      <td class="n">${p.secEps!=null?money(p.secEps,2):"n/a"}</td><td>${esc(p.secEps!=null ? p.secPeriod + (p.secCurrent ? "" : " (latest quarter not in SEC data yet)") : (p.secNote || ""))}</td>
+      <td class="n${peDiff?" diff":""}"${pe!=null&&!p.secCurrent?' style="color:var(--muted)"':""}>${pe!=null?nf(pe,1):"n/a"}</td><td class="n">${nf(h.pe,1)}</td></tr>`;
+  }).join("");
+  const sh = s.histTotal, ht = m.histTotCalc;
+  const totRows = YEARS.map((y,i)=>`<td class="n${Math.abs(ht[i]-sh[i])>=0.005?" diff":""}">${money(ht[i],2)}</td>`).join("");
+  const shRow = sh.map(v=>`<td class="n">${money(v,2)}</td>`).join("");
+  const abbv = m.H.find(h=>h.t==="ABBV"), d = abbv.div;
+  const abbv2 = Math.pow(d[iY(2025)]/d[iY(2023)],1/2)-1;
+  const roeEx = m.H.filter(h=>h.t!=="ABBV").reduce((a,h)=>a+h.roe,0)/(m.H.length-1);
+  const mfc = m.H.find(h=>h.t==="MFC"), mo = m.H.find(h=>h.t==="MO");
+  const moPay = mo.pub.secEps ? (mo.pub.lastQ+mo.pub.priorQ*3)/mo.pub.secEps : null;
+  const html = `<div class="doc-page">
+  <h2>Sources and checks</h2>
+  <p>The Final Portfolio and Historical Data tabs show your workbook values as of November 05, 2026. The app calculates market value, weights, weighted yield, dividend growth rates, expected dividends and all totals with the workbook formulas.</p>
+  <p>To change a price or a share count, double-click the cell on the Final Portfolio tab, type the new value, and press Enter. All totals and both tabs recalculate. Use “Reset to 11/05/2026 values” to remove your changes.</p>
+  <h3>Public-source cross-check</h3>
+  <p>Data from SEC EDGAR filings (XBRL company facts, 8-K and 10-Q text) and public dividend records, retrieved November 6 and 9, 2026. <span class="key"></span>Shaded cells differ from the workbook.</p>
+  <div class="tblwrap"><table class="xtable"><thead><tr>
+    <th>Ticker</th><th>SEC CIK (EDGAR filings)</th><th>Latest declared dividend / qtr</th><th>Source</th>
+    <th>Yield on declared dividend</th><th>Yield (workbook)</th><th>TTM DGR on 11/05 (public)</th><th>TTM DGR (workbook)</th>
+    <th>2025 dividends (public)</th><th>2025 (workbook)</th><th>2026 YTD through 11/05 (public, count)</th><th>2026 YTD (workbook, count)</th>
+    <th>SEC diluted EPS, last 4 qtrs</th><th>Quarters used</th><th>P/E on SEC EPS</th><th>P/E (workbook)</th></tr></thead><tbody>${rows}</tbody></table></div>
+  <h3>Historical total row</h3>
+  <p>Your workbook total row does not equal weights × dividends on the same tab (see the first check below). Choose which values the Historical Data tab and the PDF show.</p>
+  <div role="radiogroup" aria-label="Historical total row" style="display:flex;gap:18px;flex-wrap:wrap;margin:8px 0">
+    <label><input type="radio" name="tmode" id="tmode-wb" value="workbook" ${m.mode==="workbook"?"checked":""} ${Object.keys(state.edits).length?"disabled":""}> Workbook values (as in your file)</label>
+    <label><input type="radio" name="tmode" id="tmode-calc" value="calc" ${m.mode==="calc"?"checked":""}> Weights × dividends (live formula)</label>
+  </div>
+  ${Object.keys(state.edits).length?`<p style="color:var(--muted)">You changed a price or a share count, so the app uses weights × dividends. Reset your changes to use the workbook values.</p>`:""}
+  <h3>Checks to review</h3>
+  <ul>
+    <li><b>3-yr and 5-yr DGR formulas.</b> The 3-yr DGR uses 2023 to 2025 (two years of growth) with a 1/3 exponent. The 5-yr DGR uses 2021 to 2025 (four years) with a 1/5 exponent. This makes the growth rates look lower. Example: ABBV shows ${pct(abbv.g3,1)}, but the two-year rate from $5.92 to $6.56 is ${pct(abbv2,1)}. The app keeps the workbook formulas.</li>
+    <li><b>Historical total row.</b> In the workbook, the total row does not equal weights × dividends from the same tab. The 2026 total agrees (${money(ht[iY(2026)],2)}). The 2025 total shows ${money(sh[iY(2025)],2)} in the workbook and ${money(ht[iY(2025)],2)} as weights × dividends. Only 2026 agrees, so the earlier years are probably saved values from earlier updates. The % Change row changes with it. Compare the two rows in the table at the end of this list.</li>
+    <li><b>2026 Exp Div total.</b> In the photo, an icon hides part of this total (“.94”) and part of its % change (“1…”). The app shows ${money(s.expTot,2)} and ${nf(s.expPct,1)}, which agree with the visible digits. Weights × expected dividends gives ${money(m.expTotCalc,2)}. Please confirm these two cells in your file.</li>
+    <li><b>Dividend data date.</b> The Historical Data tab includes ex-dates to about October 6–14, 2026 (JPM on Oct 6 is in; ABBV on Oct 15 is not). Since then ABBV, EOG, LOW, OKE and EPD have gone ex-dividend, and ABBV, EOG, MPLX and XOM declared increases.</li>
+    <li><b>MFC.</b> The workbook shows ${money(mfc.div[iY(2024)],2)} for 2024. Public records show four payments that total ${money(DATA.mfc2024Public,2)} (USD value of the CAD dividend). The $1.60 is probably the Canadian-dollar amount (C$0.40 × 4). The workbook TTM DGR of ${pct(mfc.ttm,2)} also differs from ${pct((mfc.pub.lastQ-mfc.pub.priorQ)/mfc.pub.priorQ,1)} in USD.</li>
+    <li><b>PM 2012.</b> The workbook shows ${money(m.H.find(h=>h.t==="PM").div[iY(2012)],2)}. PM paid about $0.77 to $0.85 per quarter in 2012 (about $3.24 for the year). I did not get the 2012 public record for this item, so please confirm in FactSet.</li>
+    <li><b>Payout ratio column.</b> The values do not agree with dividends ÷ EPS for several names. Example: MO shows ${nf(mo.payout,1)}%, but the last four dividends ÷ SEC diluted EPS is about ${moPay?nf(moPay*100,0):"n/a"}%. Please confirm the FactSet field.</li>
+    <li><b>ROE total.</b> ABBV shows ${plain(abbv.roe,2)}% because its equity is near zero. This one value makes the simple average ${nf(m.T.roe,1)}%. Without ABBV, the average is ${nf(roeEx,1)}%.</li>
+    <li><b>SEC P/E check.</b> Where SEC data includes the latest reported quarter (ABBV, CI, JPM, LOW, XOM), P/E on SEC diluted EPS agrees with the workbook to 0.1. For ${stale.join(", ")}, SEC XBRL data did not yet include the latest quarter when retrieved, so those P/E values (grey) are not comparable.</li>
+    <li><b>Hidden decimals.</b> The app has only the digits that the photos show. Totals and growth rates agree with the workbook at the displayed precision. The Excel status bar shows a sum of 400.74% for the three DGR columns; the app gives 400.72%.</li>
+  </ul>
+  <div class="tblwrap"><table class="xtable"><thead><tr><th>Total row</th>${YEARS.map(y=>`<th>${y}</th>`).join("")}</tr></thead>
+  <tbody><tr><td>App (weights × dividends)</td>${totRows}</tr><tr><td>Workbook</td>${shRow}</tr></tbody></table></div>
+  <h3>Field sources</h3>
+  <ul>
+    <li>Prices, P/E, yield, PEG, payout ratio, EGR, beta, ROE, cash flow ÷ dividend, quarterly revenue growth and GICS sector: FactSet values from the workbook.</li>
+    <li>Dividend history: FactSet Dividend Downloader values from the workbook, grouped by ex-dividend date. Public records confirm all 2025 totals.</li>
+    <li>Share counts: client holdings from the workbook.</li>
+    <li>Public cross-check: SEC EDGAR (data.sec.gov XBRL company concept API; ABBV, MPLX and XOM 8-K; EOG 10-Q) and stockanalysis.com dividend history.</li>
+  </ul>
+  </div>`;
+  zoomer.innerHTML = html;
+  zoomer.querySelectorAll('input[name="tmode"]').forEach(r=>r.addEventListener("change", ()=>{ state.totalMode = r.value; saveEdits(); rebuild(); renderSources(); toast(r.value==="calc"?"The total row now uses weights × dividends.":"The total row now shows the workbook values."); }));
 }
 
-function deletePortfolio() {
-  if (Object.keys(state.portfolios).length <= 1) {
-    alert('You must keep at least one portfolio. Create another first.');
-    return;
-  }
-  if (!confirm(`Delete "${state.activePortfolio}"? This cannot be undone.`)) return;
-  delete state.portfolios[state.activePortfolio];
-  state.activePortfolio = Object.keys(state.portfolios)[0];
-  saveState();
-  renderPortfolioSelect();
-  renderTickerBox();
-  document.getElementById('resultsCard').style.display = 'none';
+/* ---------- interaction ---------- */
+const nameBox = document.getElementById("nameBox"), fxText = document.getElementById("fxText"), fxSrc = document.getElementById("fxSrc");
+function setSheet(s){
+  if (state.editing) cancelEdit();
+  state.sheet = s;
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected", String(t.dataset.sheet===s)));
+  if (s==="src"){ renderSources(); updateFormulaBar(); updateStats(); } else renderGrid();
+  area.scrollTop = 0; area.scrollLeft = 0;
+  try { if (location.hash !== "#"+s) history.replaceState(null,"","#"+s); } catch(e){}
 }
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>setSheet(t.dataset.sheet)));
 
-/* ============================================================
-   MODAL
-   ============================================================ */
-let modalCallback = null;
-function openModal(title, body, value, cb) {
-  document.getElementById('modalTitle').textContent = title;
-  document.getElementById('modalBody').textContent = body;
-  const input = document.getElementById('modalInput');
-  input.value = value || '';
-  modalCallback = cb;
-  document.getElementById('modal').classList.add('show');
-  setTimeout(() => input.focus(), 50);
-}
-function closeModal() {
-  document.getElementById('modal').classList.remove('show');
-  modalCallback = null;
-}
-function confirmModal() {
-  const v = document.getElementById('modalInput').value;
-  const cb = modalCallback;
-  closeModal();
-  if (cb) cb(v);
-}
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('modal').classList.contains('show')) confirmModal();
-  if (e.key === 'Escape') closeModal();
+function tdFromEvent(e){ const td = e.target.closest("td[data-r]"); return td && zoomer.contains(td) ? td : null; }
+zoomer.addEventListener("mousedown", e=>{
+  if (state.sheet==="src") return;
+  const td = tdFromEvent(e); if (!td || e.button!==0) return;
+  if (state.editing && td.querySelector("input")) return;
+  if (state.editing) commitEdit();
+  const r=+td.dataset.r, c=+td.dataset.c, cur=state.sel[state.sheet];
+  if (!e.shiftKey && cur.r===r && cur.c===c && state.sheet==="fp" && SHEETS.fp.cells[SHEETS.fp.cols[c].k+r] && SHEETS.fp.cells[SHEETS.fp.cols[c].k+r].edit && e.detail===1 && state.lastTap && (Date.now()-state.lastTap)>350){ state.lastTap=0; e.preventDefault(); startEdit(); return; }
+  state.lastTap = Date.now();
+  if (e.shiftKey){ if(!state.anchor[state.sheet]) state.anchor[state.sheet]={...state.sel[state.sheet]}; state.sel[state.sheet]={r,c}; }
+  else { state.sel[state.sheet]={r,c}; state.anchor[state.sheet]={r,c}; }
+  state.dragging = true; renderGrid(); area.focus({preventScroll:true}); e.preventDefault();
 });
+zoomer.addEventListener("mouseover", e=>{
+  if (!state.dragging) return; const td = tdFromEvent(e); if (!td) return;
+  const r=+td.dataset.r, c=+td.dataset.c, s=state.sel[state.sheet];
+  if (s.r!==r || s.c!==c){ state.sel[state.sheet]={r,c}; renderGrid(); }
+});
+window.addEventListener("mouseup", ()=>{ state.dragging=false; });
+zoomer.addEventListener("dblclick", e=>{ const td = tdFromEvent(e); if (td) startEdit(); });
 
-/* ============================================================
-   STATUS
-   ============================================================ */
-function flashStatus(msg, type = '', progress = null) {
-  const el = document.getElementById('status');
-  el.className = type;
-  el.style.display = 'block';
-  let html = msg;
-  if (progress !== null) {
-    html += `<div class="progress-bar"><div class="progress-bar-fill" style="width:${progress}%"></div></div>`;
-  }
-  el.innerHTML = html;
-  if (type === 'success') setTimeout(() => { el.style.display = 'none'; }, 3000);
+function curCell(){ const s = state.sel[state.sheet]; return cellAt(state.sheet, s.r, s.c); }
+function startEdit(initial){
+  if (state.sheet!=="fp") return;
+  const {cell} = curCell();
+  if (!cell || !cell.edit){ toast("Only Price and # of Shares can be changed. Other cells use formulas or FactSet data."); return; }
+  const s = state.sel.fp, td = zoomer.querySelector(`td[data-r="${s.r}"][data-c="${s.c}"]`); if (!td) return;
+  const h = MODEL.H[s.r-5];
+  state.editing = { t:h.t, field:cell.edit };
+  td.innerHTML = `<input id="cellEdit" inputmode="decimal" aria-label="New ${cell.edit==="price"?"price":"share count"} for ${esc(h.t)}" value="${initial!=null?esc(initial):esc(cell.edit==="price"?String(h.price):String(h.shares))}">`;
+  const inp = td.querySelector("input"); inp.focus(); if (initial==null) inp.select(); else inp.setSelectionRange(inp.value.length, inp.value.length);
+  inp.addEventListener("keydown", ev=>{
+    if (ev.key==="Enter"){ ev.preventDefault(); commitEdit(); move(1,0); }
+    else if (ev.key==="Escape"){ ev.preventDefault(); cancelEdit(); }
+    else if (ev.key==="Tab"){ ev.preventDefault(); commitEdit(); move(0, ev.shiftKey?-1:1); }
+    ev.stopPropagation();
+  });
+  inp.addEventListener("blur", ()=>{ if (state.editing) commitEdit(); });
 }
-
-/* ============================================================
-   DATA FETCHING — Financial Modeling Prep
-   ============================================================ */
-async function workerFetch(symbol) {
-  if (!state.workerUrl) throw new Error('Worker URL not configured');
-  const base = state.workerUrl.replace(/\/$/, '');
-  const url = `${base}/?symbol=${encodeURIComponent(symbol)}`;
-  const r = await fetch(url);
-  if (!r.ok) {
-    if (r.status === 0) throw new Error('Worker unreachable — check the URL');
-    throw new Error(`Worker returned HTTP ${r.status}`);
-  }
-  const data = await r.json();
-  if (data.error) throw new Error(data.error);
-  return data;
+function commitEdit(){
+  const ed = state.editing; if (!ed) return; const inp = document.getElementById("cellEdit");
+  state.editing = null;
+  const raw = inp ? inp.value.replace(/[$,\s]/g,"") : ""; const v = Number(raw);
+  if (!raw || !isFinite(v) || v <= 0){ toast("Type a number greater than zero."); rebuild(); renderGrid(); return; }
+  const base = DATA.holdings.find(h=>h.t===ed.t);
+  const val = ed.field==="shares" ? Math.round(v) : v;
+  state.edits[ed.t] = state.edits[ed.t] || {};
+  if ((ed.field==="price" && Math.abs(val-base.price)<1e-9) || (ed.field==="shares" && val===base.shares)) delete state.edits[ed.t][ed.field];
+  else state.edits[ed.t][ed.field] = val;
+  if (!Object.keys(state.edits[ed.t]).length) delete state.edits[ed.t];
+  saveEdits(); rebuild(); renderGrid(); syncEditUI();
+  if (state.totalMode==="workbook" && Object.keys(state.edits).length && !state.warned){ state.warned = true; toast("The Historical total row now uses weights × dividends, because the holdings changed."); }
 }
+function cancelEdit(){ state.editing=null; renderGrid(); area.focus({preventScroll:true}); }
+function move(dr, dc, extend){
+  const S = SHEETS[state.sheet], s = state.sel[state.sheet];
+  const r = Math.max(1, Math.min(S.rows, s.r+dr)), c = Math.max(0, Math.min(S.cols.length-1, s.c+dc));
+  if (extend){ if(!state.anchor[state.sheet]) state.anchor[state.sheet]={...s}; } else state.anchor[state.sheet]={r,c};
+  state.sel[state.sheet] = {r,c}; renderGrid(); scrollIntoViewCell(r,c);
+}
+function scrollIntoViewCell(r,c){
+  const td = zoomer.querySelector(`td[data-r="${r}"][data-c="${c}"]`); if (!td) return;
+  const z = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--zoom"))||1;
+  const a = area.getBoundingClientRect(), b = td.getBoundingClientRect();
+  if (b.bottom > a.bottom) area.scrollTop += (b.bottom - a.bottom) + 4;
+  if (b.top < a.top + 22*z) area.scrollTop -= (a.top + 22*z - b.top) + 4;
+  if (b.right > a.right) area.scrollLeft += (b.right - a.right) + 4;
+  if (b.left < a.left + 42*z) area.scrollLeft -= (a.left + 42*z - b.left) + 4;
+}
+area.addEventListener("keydown", e=>{
+  if (state.editing || state.sheet==="src") return;
+  const k = e.key;
+  if (k==="ArrowDown"){ move(1,0,e.shiftKey); e.preventDefault(); }
+  else if (k==="ArrowUp"){ move(-1,0,e.shiftKey); e.preventDefault(); }
+  else if (k==="ArrowRight"||(k==="Tab"&&!e.shiftKey)){ move(0,1,e.shiftKey&&k!=="Tab"); e.preventDefault(); }
+  else if (k==="ArrowLeft"||(k==="Tab"&&e.shiftKey)){ move(0,-1,e.shiftKey&&k!=="Tab"); e.preventDefault(); }
+  else if (k==="Enter"||k==="F2"){ const {cell}=curCell(); if (cell&&cell.edit) startEdit(); else move(1,0); e.preventDefault(); }
+  else if (/^[0-9.]$/.test(k) && !e.ctrlKey && !e.metaKey){ const {cell}=curCell(); if (cell&&cell.edit){ startEdit(k); e.preventDefault(); } }
+});
+window.addEventListener("keydown", e=>{ if ((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==="p"){ e.preventDefault(); printReport(); } });
 
-async function fetchTickerData(symbol) {
-  const data = await workerFetch(symbol);
-  return {
-    symbol,
-    quoteSummary: data.quote?.quoteSummary?.result?.[0] || null,
-    quoteError: data.quote?.quoteSummary?.error || null,
-    chart: data.dividends?.chart?.result?.[0] || null,
-    chartError: data.dividends?.chart?.error || null,
+const btnReset = document.getElementById("btnReset"), editPill = document.getElementById("editPill");
+function syncEditUI(){ const has = Object.keys(state.edits).length>0; btnReset.hidden = !has; editPill.hidden = !has; }
+btnReset.addEventListener("click", ()=>{ state.edits = {}; saveEdits(); rebuild(); if (state.sheet==="src") renderSources(); else renderGrid(); syncEditUI(); toast("All prices and share counts are back to the 11/05/2026 values."); });
+
+/* zoom */
+const zoomIn = document.getElementById("zoom"), zLabel = document.getElementById("zLabel");
+function setZoom(p){ p=Math.max(50,Math.min(150,p)); zoomIn.value=p; zLabel.textContent=p+"%"; document.documentElement.style.setProperty("--zoom", p/100); }
+zoomIn.addEventListener("input", ()=>setZoom(+zoomIn.value));
+document.getElementById("zOut").addEventListener("click", ()=>setZoom(+zoomIn.value-10));
+document.getElementById("zIn").addEventListener("click", ()=>setZoom(+zoomIn.value+10));
+
+let toastTimer=null;
+function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove("show"), 3200); }
+
+/* ---------- PDF report ---------- */
+const downloadsP = (window.claude && typeof window.claude.use === "function") ? Promise.resolve(window.claude.use("downloads")).catch(()=>null) : Promise.resolve(null);
+const COL = { yellow:[255,255,0], orange:[255,192,0], tan:[201,173,115], green:[146,208,80], grid:[200,200,200], ink:[0,0,0], muted:[95,94,92] };
+
+function buildPdf(){
+  const m = MODEL, { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation:"landscape", unit:"pt", format:"letter" });
+  const W = doc.internal.pageSize.getWidth(), PH = doc.internal.pageSize.getHeight(), M = 24;
+  const edited = Object.keys(state.edits).length>0;
+  const base = { font:"helvetica", fontSize:6.8, cellPadding:{top:2.6,bottom:2.6,left:2,right:2}, lineColor:COL.grid, lineWidth:0.3, textColor:20, valign:"middle", halign:"center", overflow:"linebreak" };
+  const head1 = (title, sub) => {
+    doc.setFont("helvetica","bold"); doc.setFontSize(14); doc.setTextColor(0); doc.text(title, M, 36);
+    doc.setFont("helvetica","normal"); doc.setFontSize(8.5); doc.setTextColor(...COL.muted); doc.text(sub, M, 49);
+    const cw = 150, x = W - M - cw;
+    doc.setFillColor(...COL.yellow); doc.rect(x, 24, cw, 13, "F");
+    doc.setFillColor(...COL.orange); doc.rect(x, 37, cw, 13, "F");
+    doc.setTextColor(0); doc.setFont("helvetica","bold"); doc.setFontSize(8);
+    doc.text("November 05, 2026 Prices", x+cw/2, 33.5, {align:"center"}); doc.text("November 05, 2026 Data", x+cw/2, 46.5, {align:"center"});
   };
-}
 
-/* ============================================================
-   COMPUTATIONS
-   ============================================================ */
-// Sum dividends by calendar year.
-// Yahoo returns chart.events.dividends as a map of timestamp -> {amount, date}.
-// FMP returned an array — we accept either shape for resilience.
-function dividendsByYear(divs) {
-  const map = {};
-  if (!divs) return map;
+  // Page 1: Final Portfolio
+  head1("Predictable Dividend Growth Portfolio", "Final Portfolio" + (edited ? "  ·  includes edited prices or share counts" : ""));
+  const fpHead = [["", "Company","Ticker","Price","# of\nShares","Market\nValue","%","P/E","Yield","Weighted\nYield","PEG\nCurrent\nYear","1-yr\nDGR","3-yr\nDGR","5-yr\nDGR","Dividend\nPayout\nRatio","5-yr\nEGR","5-yr\nBeta","ROE","CashFlow:\nDividend","3-mos\nQTR Rev\nGr.","GICS Sector"]];
+  const fpStyles = Object.assign({}, base, {fontSize:6.5, cellPadding:{top:2.8,bottom:2.8,left:1.6,right:1.6}});
+  const fpBody = m.H.map(h=>[String(h.n), h.name, h.t, money(h.price,2), nf(h.shares,0), money(h.mv,0), pct(h.w,1), num(h.pe,1), num(h.yld,1), num(r2(h.wy),1),
+    h.peg==null?"#N/A":num(h.peg,1), pct(r2(h.ttm),1), pct(r2(h.g3),1), pct(r2(h.g5),1), num(h.payout,1)+"%", num(h.egr,1), num(h.beta,1), plain(h.roe,2)+"%", num(h.cfdiv,1), num(h.qrev,1)+"%", h.sector]);
+  const T = m.T;
+  const fpFoot = [["", "Total:", "", "", "", money(T.mv,0), pct(r2(T.w),1), num(T.pe,1), num(T.yld,1), num(T.wy,1), num(T.peg,1), pct(T.ttm,1), pct(T.g3,1), pct(T.g5,1), num(T.payout,1)+"%", num(T.egr,1)+"%", num(T.beta,1), plain(T.roe,1)+"%", num(T.cfdiv,1), num(T.qrev,1)+"%", ""]];
+  doc.autoTable({ startY:60, margin:{left:M,right:M,bottom:36}, head:fpHead, body:fpBody, foot:fpFoot, theme:"grid", styles:fpStyles,
+    headStyles:{ fillColor:[255,255,255], textColor:0, fontStyle:"bold", valign:"bottom", lineWidth:{bottom:0.9,top:0,left:0,right:0}, lineColor:[60,60,60] },
+    footStyles:{ fillColor:[255,255,255], textColor:0, fontStyle:"bold", lineWidth:{top:0.9,bottom:0,left:0,right:0}, lineColor:[60,60,60] },
+    columnStyles:{ 0:{cellWidth:12,halign:"right",textColor:COL.muted}, 1:{cellWidth:122,halign:"left"}, 2:{cellWidth:26}, 3:{cellWidth:36,halign:"right"}, 4:{cellWidth:27}, 5:{cellWidth:41,halign:"right"},
+      6:{cellWidth:27,halign:"right"}, 7:{cellWidth:22,halign:"right"}, 8:{cellWidth:22,halign:"right"}, 9:{cellWidth:34}, 10:{cellWidth:30}, 11:{cellWidth:26,halign:"right"}, 12:{cellWidth:26,halign:"right"}, 13:{cellWidth:26,halign:"right"},
+      14:{cellWidth:32}, 15:{cellWidth:23}, 16:{cellWidth:22}, 17:{cellWidth:38}, 18:{cellWidth:40}, 19:{cellWidth:31,halign:"right"}, 20:{cellWidth:"auto",halign:"left"} },
+    didParseCell: d => { if (d.section==="foot" && d.column.index===1) d.cell.styles.halign="left"; if (d.section==="head" && d.column.index===1) d.cell.styles.halign="center"; if (d.section==="head" && d.column.index===20) d.cell.styles.halign="left"; }
+  });
 
-  // Yahoo shape: object keyed by unix timestamp
-  if (typeof divs === 'object' && !Array.isArray(divs)) {
-    for (const key of Object.keys(divs)) {
-      const ev = divs[key];
-      if (!ev) continue;
-      const amt = ev.amount ?? 0;
-      const ts = ev.date ?? parseInt(key, 10);
-      if (!amt || !ts) continue;
-      const yr = new Date(ts * 1000).getUTCFullYear().toString();
-      map[yr] = (map[yr] || 0) + amt;
+  // Page 2: Historical Data
+  doc.addPage("letter","landscape");
+  head1("Predictable Dividend Growth Portfolio", "Historical Data  ·  dividends per share by ex-dividend date; 2026 is year-to-date");
+  const nY = YEARS.length;
+  const h2a = [{content:"",colSpan:2,styles:{lineWidth:0}}, {content:"Dividends Paid in Calendar Years Ending:", colSpan:nY+1, styles:{fillColor:COL.orange,halign:"left",fontStyle:"bold",lineWidth:0}},
+    {content:"TTM",styles:{lineWidth:0}},{content:"3-yr",styles:{lineWidth:0}},{content:"5-yr",styles:{lineWidth:0}},{content:"2026\nExp",styles:{lineWidth:0}}];
+  const h2b = ["Ticker","Weight"].concat(YEARS.map(String)).concat(["CY Qtrs\nPaid","DGR","DGR","DGR","Div"]);
+  const hb = m.H.map(h=>[h.t, pct(h.w,0)].concat(h.div.map(v=>money(v,2))).concat([String(h.qtrs), pct(h.ttm,2), pct(r2(h.g3),1), pct(r2(h.g5),1), money(h.exp,2)]));
+  hb.push(["", pct(m.H.reduce((a,h)=>a+h.w,0),0)].concat(m.histTot.map(v=>money(v,2))).concat([pct(m.qtrsPct,2),"","","",money(m.expTot,2)]));
+  hb.push([{content:"% Change:",colSpan:2}].concat(m.histPct.map(v=>v==null?"":num(v,1))).concat(["","","","",num(m.expPct,1)]));
+  const yStart = 2, cQ = 2+nY, cT = cQ+1, cX = cQ+4, nRows = hb.length;
+  const cs = {0:{cellWidth:30}, 1:{cellWidth:24}};
+  for (let j=0;j<nY;j++) cs[yStart+j] = {cellWidth:22.8};
+  cs[cQ]={cellWidth:24}; cs[cT]={cellWidth:25,halign:"right"}; cs[cT+1]={cellWidth:22,halign:"right"}; cs[cT+2]={cellWidth:23,halign:"right"}; cs[cX]={cellWidth:26,halign:"right"};
+  doc.autoTable({ startY:60, margin:{left:M,right:M,bottom:36}, head:[h2a,h2b], body:hb, theme:"grid", styles:Object.assign({},base,{fontSize:6,cellPadding:{top:2.7,bottom:2.7,left:0.6,right:0.8}}),
+    headStyles:{ fillColor:[255,255,255], textColor:0, fontStyle:"bold", valign:"bottom", lineWidth:{bottom:0.9,top:0,left:0,right:0}, lineColor:[60,60,60] },
+    columnStyles:cs,
+    didParseCell: d => {
+      if (d.section!=="body") return;
+      const ri = d.row.index, ci = d.column.index;
+      if (ri < nRows-2){ if (ci>=cT && ci<cX) d.cell.styles.fillColor = COL.tan; if (ci===cX) d.cell.styles.fillColor = COL.green; }
+      if (ri === nRows-2){ d.cell.styles.fontStyle="bold"; d.cell.styles.lineWidth={top:0.9,bottom:0,left:0,right:0}; d.cell.styles.lineColor=[60,60,60]; }
+      if (ri === nRows-1){ d.cell.styles.fontStyle="bold"; if ((ci>yStart && ci<=cQ) || ci===cX) d.cell.styles.fillColor = COL.green; if (ci===0){ d.cell.styles.halign="left"; } }
     }
-    return map;
-  }
+  });
 
-  // Array shape (e.g. FMP or normalized)
-  if (Array.isArray(divs)) {
-    for (const d of divs) {
-      const yr = (d.date || d.paymentDate || '').slice(0, 4);
-      if (!yr) continue;
-      const amt = d.adjDividend ?? d.dividend ?? d.amount ?? 0;
-      map[yr] = (map[yr] || 0) + amt;
-    }
-  }
-  return map;
-}
-
-// Round to 4 digits to avoid FP artifacts
-const r4 = x => Math.round(x * 10000) / 10000;
-
-// Compound annual growth rate over N periods (RRI equivalent)
-function rri(n, start, end) {
-  if (!start || !end || start <= 0 || end <= 0) return null;
-  return Math.pow(end / start, 1 / n) - 1;
-}
-
-function computeDGRs(divsByYear) {
-  const currentYear = new Date().getFullYear();
-  // Always use the last FULLY COMPLETED calendar year as the endpoint.
-  // Never use the current (partial) year — it would understate growth.
-  const lastFullYear = currentYear - 1;
-
-  const v = y => divsByYear[String(y)] || 0;
-
-  // If the last full year has no dividends, this ticker didn't pay last year — no DGR possible.
-  if (!v(lastFullYear)) {
-    return { dgr1: null, dgr3: null, dgr5: null, lastYear: null, ttm: 0 };
-  }
-
-  return {
-    dgr1: v(lastFullYear - 1) ? v(lastFullYear) / v(lastFullYear - 1) - 1 : null,
-    dgr3: rri(3, v(lastFullYear - 3), v(lastFullYear)),
-    dgr5: rri(5, v(lastFullYear - 5), v(lastFullYear)),
-    lastYear: lastFullYear,
-    ttm: v(lastFullYear),
-  };
-}
-
-// Process one ticker's Yahoo data into a flat row
-function processRow(raw) {
-  const d = { symbol: raw.symbol, errors: [] };
-  const qs = raw.quoteSummary || {};
-
-  // Yahoo returns values wrapped like {raw: 0.0234, fmt: "2.34%"} — extract .raw
-  const val = (obj) => (obj && typeof obj === 'object' && 'raw' in obj) ? obj.raw : (obj ?? null);
-
-  if (raw.quoteError?.description) d.errors.push('quote: ' + raw.quoteError.description);
-  if (raw.chartError?.description) d.errors.push('chart: ' + raw.chartError.description);
-
-  const sd  = qs.summaryDetail          || {};
-  const dks = qs.defaultKeyStatistics   || {};
-  const fd  = qs.financialData          || {};
-  const pr  = qs.price                  || {};
-  const ap  = qs.assetProfile           || {};
-  const qt  = qs.quoteType              || {};
-  const inc = qs.incomeStatementHistory?.incomeStatementHistory || [];
-  const cfh = qs.cashflowStatementHistory?.cashflowStatements   || [];
-
-  d.companyName = qt.longName || pr.longName || pr.shortName || raw.symbol;
-  d.sector      = ap.sector || '';
-  d.price       = val(pr.regularMarketPrice);
-  d.pe          = val(sd.trailingPE);
-  d.dividendYield = val(sd.dividendYield);
-  d.peg         = val(dks.pegRatio);
-  d.payoutRatio = val(sd.payoutRatio);
-  d.beta        = val(sd.beta) ?? val(dks.beta);
-  d.roe         = val(fd.returnOnEquity);
-  d.sharesOutstanding = val(dks.sharesOutstanding);
-  d.netIncome   = val(inc[0]?.netIncome);
-  d.eps         = val(dks.trailingEps);
-  d.dps         = val(sd.trailingAnnualDividendRate) ?? val(sd.dividendRate);
-  d.dividend    = d.dps;
-
-  // Cash-flow per share — from most recent annual cashflow statement
-  const ocf = val(cfh[0]?.totalCashFromOperatingActivities);
-  d.cfps = (ocf && d.sharesOutstanding) ? ocf / d.sharesOutstanding : null;
-
-  // Quarterly revenue growth YoY — Yahoo gives this directly
-  d.qtrRevGrowth = val(fd.revenueGrowth);
-
-  // EGR: CAGR of net income over available income-statement history (usually 3–4 years)
-  d.egr5y = computeEGR(inc, val);
-
-  // Historical dividends → by year
-  const divEvents = raw.chart?.events?.dividends || null;
-  d.divByYear = dividendsByYear(divEvents);
-
-  const dgr = computeDGRs(d.divByYear);
-  d.dgr1 = dgr.dgr1; d.dgr3 = dgr.dgr3; d.dgr5 = dgr.dgr5;
-  d.lastDivYear = dgr.lastYear;
-
-  // Derived
-  d.totalDividend = (d.dps ?? 0) * (d.sharesOutstanding ?? 0);
-  d.cfDivRatio = (d.cfps && d.dps) ? d.cfps / d.dps : null;
-
-  return d;
-}
-
-// Compound annual growth rate of net income over the available years of history
-function computeEGR(inc, val) {
-  if (!inc || inc.length < 2) return null;
-  const curr = val(inc[0]?.netIncome);
-  const old  = val(inc[inc.length - 1]?.netIncome);
-  if (!curr || !old || curr <= 0 || old <= 0) return null;
-  const years = inc.length - 1;
-  return Math.pow(curr / old, 1 / years) - 1;
-}
-
-/* ============================================================
-   MAIN UPDATE
-   ============================================================ */
-async function updatePrices() {
-  if (!state.workerUrl) {
-    flashStatus('Please set up your Cloudflare Worker URL first (Section 01 above).', 'error');
-    document.getElementById('workerUrl')?.focus();
-    return;
-  }
-  // Auto-save current edits
-  savePortfolio();
-  const p = state.portfolios[state.activePortfolio];
-  if (!p || p.tickers.length === 0) {
-    flashStatus('Add some tickers first.', 'error');
-    return;
-  }
-
-  const btn = document.getElementById('updateBtn');
-  btn.disabled = true;
-  btn.textContent = '↻ Fetching…';
-
-  const total = p.tickers.length;
-  let done = 0;
-  flashStatus(`Fetching ${total} holdings…`, '', 0);
-
-  const rows = [];
-  // Process 3 tickers at a time for a balance of speed vs rate limits
-  const BATCH = 3;
-  for (let i = 0; i < p.tickers.length; i += BATCH) {
-    const batch = p.tickers.slice(i, i + BATCH);
-    const settled = await Promise.all(batch.map(async t => {
-      try {
-        const raw = await fetchTickerData(t.symbol);
-        return processRow(raw);
-      } catch (e) {
-        return { symbol: t.symbol, error: e.message };
-      }
-    }));
-    rows.push(...settled);
-    done += batch.length;
-    flashStatus(`Fetching… ${done} of ${total} complete`, '', Math.round(done / total * 100));
-  }
-
-  // Equal weighting: each holding = 1/N
-  const validCount = rows.filter(r => !r.error).length;
-  const eqWeight = validCount > 0 ? 1 / validCount : 0;
-  for (const r of rows) r.weight = r.error ? 0 : eqWeight;
-
-  state.lastData = { rows, portfolioName: state.activePortfolio, equalWeight: eqWeight };
-  state.lastUpdated = new Date().toISOString();
-  saveState();
-
-  btn.disabled = false;
-  btn.textContent = '↻ Update Prices & Data';
-
-  const errCount = rows.filter(r => r.error).length;
-  if (errCount) {
-    flashStatus(`Done — ${total - errCount} updated, ${errCount} failed. Failed tickers may be delisted or misspelled.`, 'error');
-  } else {
-    flashStatus(`Updated all ${total} holdings successfully.`, 'success');
-  }
-
-  document.getElementById('resultsCard').style.display = 'block';
-  renderSummary();
-  renderHistory();
-  updateMasthead();
-  document.getElementById('resultsCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-/* ============================================================
-   FORMATTING
-   ============================================================ */
-const fmtMoney = n => n == null || isNaN(n) ? '—' : n.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const fmtMoneyInt = n => n == null || isNaN(n) ? '—' : n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
-const fmtPct = n => n == null || isNaN(n) ? '—' : (n * 100).toFixed(2) + '%';
-const fmtPct1 = n => n == null || isNaN(n) ? '—' : (n * 100).toFixed(1) + '%';
-const fmtNum = (n, dec = 2) => n == null || isNaN(n) ? '—' : Number(n).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
-const fmtInt = n => n == null || isNaN(n) ? '—' : Math.round(n).toLocaleString('en-US');
-const fmtX = n => n == null || isNaN(n) ? '—' : Number(n).toFixed(1) + 'x';
-const gainLoss = n => n == null ? '' : (n > 0 ? 'gain' : (n < 0 ? 'loss' : ''));
-const pctClass = n => n == null ? '' : (n >= 0.05 ? 'gain' : (n < 0 ? 'loss' : ''));
-const fmtMoneyBig = n => {
-  if (n == null || isNaN(n)) return '—';
-  if (Math.abs(n) >= 1e9) return '$' + (n/1e9).toFixed(2) + 'B';
-  if (Math.abs(n) >= 1e6) return '$' + (n/1e6).toFixed(1) + 'M';
-  if (Math.abs(n) >= 1e3) return '$' + (n/1e3).toFixed(0) + 'K';
-  return '$' + Math.round(n);
-};
-
-/* ============================================================
-   RENDER — Summary tab
-   ============================================================ */
-function renderSummary() {
-  if (!state.lastData) return;
-  const { rows, equalWeight } = state.lastData;
-  const compact = document.getElementById('viewCompact')?.checked;
-
-  // --- Portfolio stats (equal-weighted) ---
-  const valid = rows.filter(r => !r.error);
-  const avg = (fn) => valid.length ? valid.reduce((s, r) => s + (fn(r) || 0), 0) / valid.length : 0;
-  const avgPos = (fn) => {
-    const vals = valid.map(fn).filter(v => v != null && !isNaN(v) && v > 0);
-    return vals.length ? vals.reduce((s,v) => s+v, 0) / vals.length : 0;
-  };
-  const weightedYield = avg(r => r.dividendYield);
-  const weightedPE = avgPos(r => r.pe);
-  const weightedBeta = avg(r => r.beta);
-  const weightedDGR3 = avg(r => r.dgr3);
-  const weightedDGR5 = avg(r => r.dgr5);
-  const weightedPayout = avgPos(r => r.payoutRatio);
-
-  const statsEl = document.getElementById('portfolioStats');
-  statsEl.innerHTML = `
-    <div class="stat"><div class="stat-label">Holdings</div><div class="stat-value">${rows.length}</div></div>
-    <div class="stat"><div class="stat-label">Weight Each</div><div class="stat-value">${(equalWeight*100).toFixed(2)}<span class="unit">%</span></div></div>
-    <div class="stat"><div class="stat-label">Yield (avg)</div><div class="stat-value">${(weightedYield*100).toFixed(2)}<span class="unit">%</span></div></div>
-    <div class="stat"><div class="stat-label">P/E (avg)</div><div class="stat-value">${weightedPE.toFixed(1)}<span class="unit">x</span></div></div>
-    <div class="stat"><div class="stat-label">3-yr DGR</div><div class="stat-value">${(weightedDGR3*100).toFixed(2)}<span class="unit">%</span></div></div>
-    <div class="stat"><div class="stat-label">5-yr DGR</div><div class="stat-value">${(weightedDGR5*100).toFixed(2)}<span class="unit">%</span></div></div>
-    <div class="stat"><div class="stat-label">Beta (avg)</div><div class="stat-value">${weightedBeta.toFixed(2)}</div></div>
-    <div class="stat"><div class="stat-label">Payout (avg)</div><div class="stat-value">${(weightedPayout*100).toFixed(0)}<span class="unit">%</span></div></div>
-  `;
-
-  // --- Column definitions ---
-  const FULL_COLS = [
-    { k: 'symbol', h: 'Ticker', render: r => `<td class="ticker">${r.symbol}</td>` },
-    { k: 'companyName', h: 'Company', render: r => `<td class="company">${r.companyName || ''}</td>` },
-    { k: 'price', h: 'Price', cls: 'num', render: r => `<td class="num mono">${fmtMoney(r.price)}</td>` },
-    { k: 'weight', h: 'Weight', cls: 'num', render: r => `<td class="num mono">${fmtPct1(r.weight)}</td>` },
-    { k: 'pe', h: 'P/E', cls: 'num', render: r => `<td class="num mono">${fmtX(r.pe)}</td>` },
-    { k: 'dividendYield', h: 'Yield', cls: 'num', render: r => `<td class="num mono ${pctClass(r.dividendYield)}">${fmtPct(r.dividendYield)}</td>` },
-    { k: 'peg', h: 'PEG', cls: 'num', render: r => `<td class="num mono">${fmtX(r.peg)}</td>` },
-    { k: 'dgr1', h: 'DGR 1y', cls: 'num', render: r => `<td class="num mono ${gainLoss(r.dgr1)}">${fmtPct(r.dgr1)}</td>` },
-    { k: 'dgr3', h: 'DGR 3y', cls: 'num', render: r => `<td class="num mono ${gainLoss(r.dgr3)}">${fmtPct(r.dgr3)}</td>` },
-    { k: 'dgr5', h: 'DGR 5y', cls: 'num', render: r => `<td class="num mono ${gainLoss(r.dgr5)}">${fmtPct(r.dgr5)}</td>` },
-    { k: 'payoutRatio', h: 'Payout', cls: 'num', render: r => `<td class="num mono">${fmtPct(r.payoutRatio)}</td>` },
-    { k: 'dps', h: 'Divd/Sh', cls: 'num', render: r => `<td class="num mono">${fmtMoney(r.dps)}</td>` },
-    { k: 'sharesOutstanding', h: 'Shrs Out', cls: 'num', render: r => `<td class="num mono">${fmtMoneyBig(r.sharesOutstanding).replace('$','')}</td>` },
-    { k: 'netIncome', h: 'Net Income', cls: 'num', render: r => `<td class="num mono">${fmtMoneyBig(r.netIncome)}</td>` },
-    { k: 'egr5y', h: 'EGR 5y', cls: 'num', render: r => `<td class="num mono ${gainLoss(r.egr5y)}">${fmtPct(r.egr5y)}</td>` },
-    { k: 'beta', h: 'Beta', cls: 'num', render: r => `<td class="num mono">${fmtNum(r.beta)}</td>` },
-    { k: 'roe', h: 'ROE', cls: 'num', render: r => `<td class="num mono ${gainLoss(r.roe)}">${fmtPct(r.roe)}</td>` },
-    { k: 'cfDivRatio', h: 'CF:Div', cls: 'num', render: r => `<td class="num mono">${fmtX(r.cfDivRatio)}</td>` },
-    { k: 'cfps', h: 'CFPS', cls: 'num', render: r => `<td class="num mono">${fmtMoney(r.cfps)}</td>` },
-    { k: 'qtrRevGrowth', h: 'Qtr Rev YoY', cls: 'num', render: r => `<td class="num mono ${gainLoss(r.qtrRevGrowth)}">${fmtPct(r.qtrRevGrowth)}</td>` },
-    { k: 'sector', h: 'GICS Sector', render: r => `<td class="sector">${r.sector || ''}</td>` },
+  // Page 3: notes
+  doc.addPage("letter","landscape");
+  doc.setFont("helvetica","bold"); doc.setFontSize(14); doc.setTextColor(0); doc.text("Notes and sources", M, 36);
+  doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(30);
+  const notes = [
+    "Prices and data are as of November 05, 2026.",
+    "Weights (%) are market value divided by total market value. Weighted Yield is weight × yield.",
+    "Totals: P/E, Yield, 1-yr DGR and Beta are weighted by portfolio weight. PEG, 3-yr DGR, 5-yr DGR, payout ratio, EGR, ROE, cash flow to dividend and quarterly revenue growth are simple averages. PEG skips #N/A values.",
+    "TTM DGR compares the latest quarterly dividend with the dividend for the same quarter one year earlier.",
+    "3-yr DGR = (2025 dividends ÷ 2023 dividends)^(1/3) - 1. 5-yr DGR = (2025 dividends ÷ 2021 dividends)^(1/5) - 1. 2026 Exp Div = 2025 dividends × (1 + 3-yr DGR).",
+    m.mode==="calc" ? "Historical total row = sum of (weight × dividends per share) for each year. % Change compares each year with the year before. 2026 is year-to-date." : "Historical total row: portfolio-weighted dividends per share for each year, as shown in the workbook. % Change compares each year with the year before. 2026 is year-to-date.",
+    "Dividend history groups dividends by ex-dividend date. The data includes ex-dates to about October 6–14, 2026.",
+    "Sources: FactSet (prices, valuation and quality fields, dividend history). Public cross-check: SEC EDGAR filings and public dividend records, retrieved November 6 and 9, 2026.",
+    "Past dividend growth does not guarantee future dividends."
   ];
+  let y = 60;
+  notes.forEach(n=>{ const lines = doc.splitTextToSize(n, W-2*M-60); doc.text("•", M, y); doc.text(lines, M+10, y); y += lines.length*12 + 5; });
 
-  const COMPACT_KEYS = ['symbol','companyName','price','weight','pe','dividendYield','dgr3','dgr5','payoutRatio','beta','sector'];
-  const cols = compact ? FULL_COLS.filter(c => COMPACT_KEYS.includes(c.k)) : FULL_COLS;
-
-  // Build header
-  const hdrRow = cols.map(c => `<th class="${c.cls || ''}">${c.h}</th>`).join('');
-  // Build rows
-  const tbody = rows.map(r => {
-    if (r.error) {
-      return `<tr class="err"><td class="ticker">${r.symbol}</td><td colspan="${cols.length-1}">Error: ${r.error}</td></tr>`;
-    }
-    return `<tr>${cols.map(c => c.render(r)).join('')}</tr>`;
-  }).join('');
-
-  // Totals / averages row
-  const totalWeight = valid.reduce((s, r) => s + r.weight, 0);
-  const avgs = {
-    symbol: 'AVERAGE',
-    companyName: `(equal-weighted, n=${valid.length})`,
-    price: '',
-    weight: fmtPct1(totalWeight),
-    pe: fmtX(weightedPE),
-    dividendYield: fmtPct(weightedYield),
-    peg: fmtX(avgPos(r => r.peg)),
-    dgr1: fmtPct(avg(r => r.dgr1)),
-    dgr3: fmtPct(weightedDGR3),
-    dgr5: fmtPct(weightedDGR5),
-    payoutRatio: fmtPct(weightedPayout),
-    dps: fmtMoney(avg(r => r.dps)),
-    sharesOutstanding: '',
-    netIncome: '',
-    egr5y: fmtPct(avg(r => r.egr5y)),
-    beta: fmtNum(weightedBeta),
-    roe: fmtPct(avgPos(r => r.roe)),
-    cfDivRatio: fmtX(avgPos(r => r.cfDivRatio)),
-    cfps: fmtMoney(avg(r => r.cfps)),
-    qtrRevGrowth: fmtPct(avg(r => r.qtrRevGrowth)),
-    sector: '',
-  };
-  const totalsRow = `<tr class="total">${cols.map(c => {
-    const v = avgs[c.k] ?? '';
-    return `<td class="${c.cls || ''} ${c.cls === 'num' ? 'mono' : ''}">${v}</td>`;
-  }).join('')}</tr>`;
-
-  document.getElementById('summaryTable').innerHTML = `<thead><tr>${hdrRow}</tr></thead><tbody>${tbody}${totalsRow}</tbody>`;
+  const pages = doc.getNumberOfPages();
+  for (let p=1;p<=pages;p++){
+    doc.setPage(p); doc.setFont("helvetica","normal"); doc.setFontSize(7.5); doc.setTextColor(...COL.muted);
+    doc.text("PDG Portfolio Update 2026 Q3  ·  Prices and data as of November 05, 2026", M, PH-18);
+    doc.text(`Page ${p} of ${pages}`, W-M, PH-18, {align:"right"});
+  }
+  return doc;
 }
+window.buildPdf = buildPdf;
 
-/* ============================================================
-   RENDER — Historical Dividends tab
-   ============================================================ */
-function renderHistory() {
-  if (!state.lastData) return;
-  const { rows } = state.lastData;
-  const yearsShown = parseInt(document.getElementById('yearsShown')?.value || '25');
-
-  const thisYear = new Date().getFullYear();
-  const lastFullYear = thisYear - 1;
-  const projectedYear = thisYear + 1;
-  // Start year
-  const allYears = new Set();
-  for (const r of rows) {
-    if (!r.divByYear) continue;
-    Object.keys(r.divByYear).forEach(y => allYears.add(Number(y)));
-  }
-  let startYear;
-  if (yearsShown === 25) {
-    startYear = Math.min(...Array.from(allYears), thisYear - 5) || 2002;
-    startYear = Math.max(startYear, 2002);
-  } else {
-    startYear = thisYear - yearsShown + 1;
-  }
-  const years = [];
-  for (let y = startYear; y <= projectedYear; y++) years.push(y);
-
-  // Build header — current year is labeled YTD (partial), next year is "exp" (projected)
-  const yearHdrs = years.map(y => {
-    if (y === projectedYear) return `<th class="num">${y} <span style="color:var(--gold-soft)">exp</span>`;
-    if (y === thisYear)      return `<th class="num">${y} <span style="color:var(--gold-soft)">ytd</span>`;
-    return `<th class="num">${y}</th>`;
-  }).join('');
-  const hdr = `<tr><th>Ticker</th><th>Company</th>${yearHdrs}<th class="num">TTM DGR</th><th class="num">3-yr DGR</th><th class="num">5-yr DGR</th></tr>`;
-
-  // Body rows
-  const body = rows.map(r => {
-    if (r.error) {
-      return `<tr class="err"><td class="ticker">${r.symbol}</td><td colspan="${years.length + 4}">No data</td></tr>`;
+const btnPrint = document.getElementById("btnPrint");
+async function printReport(){
+  if (!window.jspdf || !window.jspdf.jsPDF || !window.jspdf.jsPDF.API.autoTable){ toast("The PDF tool did not load. Use your browser's Print command instead."); try{ window.print(); }catch(e){} return; }
+  btnPrint.disabled = true; const label = btnPrint.textContent; btnPrint.textContent = "Making PDF…";
+  try {
+    const doc = buildPdf(), fname = "PDG Portfolio Report 2026-11-05.pdf";
+    const dl = await downloadsP;
+    if (dl){
+      try { await dl.save({ filename:fname, data:doc.output("blob") }); toast("PDF report saved."); }
+      catch(err){ const c = err && err.code; if (c==="declined") toast("PDF not saved."); else if (c==="rate_limited") toast("A save request is already open. Try again in a moment."); else toast("This view cannot save files. Open the page in claude.ai or use the HTML file."); }
+    } else if (window.claude) {
+      toast("This view cannot save files. Open the page in claude.ai or use the HTML file.");
+    } else {
+      doc.save(fname); toast("PDF report downloaded.");
     }
-    const byYear = r.divByYear || {};
-    const cells = years.map(y => {
-      if (y === projectedYear) {
-        // Project using 3-yr DGR applied to last FULL year (never the partial current year)
-        const baseVal = byYear[String(lastFullYear)] || 0;
-        const proj = r.dgr3 != null && baseVal ? baseVal * (1 + r.dgr3) : null;
-        return `<td class="num mono" style="color:var(--gold)">${proj ? fmtNum(proj, 2) : '—'}</td>`;
-      }
-      const v = byYear[String(y)] || 0;
-      // Current-year YTD values are italicized to signal they're partial
-      if (y === thisYear) {
-        return `<td class="num mono" style="color:var(--muted); font-style:italic">${v > 0 ? fmtNum(v, 2) : '<span style="color:var(--rule)">—</span>'}</td>`;
-      }
-      return `<td class="num mono">${v > 0 ? fmtNum(v, 2) : '<span style="color:var(--rule)">—</span>'}</td>`;
-    }).join('');
-    return `<tr>
-      <td class="ticker">${r.symbol}</td>
-      <td class="company">${r.companyName || ''}</td>
-      ${cells}
-      <td class="num mono ${gainLoss(r.dgr1)}">${fmtPct(r.dgr1)}</td>
-      <td class="num mono ${gainLoss(r.dgr3)}">${fmtPct(r.dgr3)}</td>
-      <td class="num mono ${gainLoss(r.dgr5)}">${fmtPct(r.dgr5)}</td>
-    </tr>`;
-  }).join('');
-
-  // Totals: average DPS per year (equal-weighted)
-  const portfolioByYear = {};
-  for (const y of years) {
-    let total = 0;
-    for (const r of rows) {
-      if (r.error) continue;
-      const dps = r.divByYear?.[String(y)] || 0;
-      total += dps * (r.weight || 0);
-    }
-    portfolioByYear[y] = total;
-  }
-  // Projected — always base on last FULL year, never current partial year
-  let projPortfolio = 0;
-  for (const r of rows) {
-    if (r.error) continue;
-    const baseVal = r.divByYear?.[String(lastFullYear)] || 0;
-    const proj = r.dgr3 != null && baseVal ? baseVal * (1 + r.dgr3) : baseVal;
-    projPortfolio += proj * (r.weight || 0);
-  }
-  portfolioByYear[projectedYear] = projPortfolio;
-
-  const portRow = years.map(y => {
-    const v = portfolioByYear[y] || 0;
-    const isProj = y === projectedYear;
-    return `<td class="num mono" style="${isProj ? 'color:var(--gold); font-weight:700' : 'font-weight:700'}">${v > 0 ? fmtNum(v, 4) : '—'}</td>`;
-  }).join('');
-
-  // YoY % change row — skip the YTD comparison since it would misleadingly show a partial-year drop
-  const changeRow = years.map((y, i) => {
-    if (i === 0) return `<td></td>`;
-    if (y === thisYear) return `<td style="color:var(--muted); font-size:11px; font-style:italic; text-align:right">ytd</td>`;
-    const prev = portfolioByYear[years[i-1]];
-    const curr = portfolioByYear[y];
-    if (!prev) return `<td></td>`;
-    // For the projected year, compare against last FULL year, not partial current year
-    if (y === projectedYear) {
-      const lastFullVal = portfolioByYear[lastFullYear];
-      if (!lastFullVal) return `<td></td>`;
-      const chg = (curr / lastFullVal - 1);
-      return `<td class="num mono ${gainLoss(chg)}" style="font-size:11px">${fmtPct1(chg)}</td>`;
-    }
-    const chg = (curr / prev - 1);
-    return `<td class="num mono ${gainLoss(chg)}" style="font-size:11px">${fmtPct1(chg)}</td>`;
-  }).join('');
-
-  const totalsBody = `
-    <tr class="total"><td colspan="2" style="font-weight:700">Portfolio DPS (equal-wtd):</td>${portRow}<td colspan="3"></td></tr>
-    <tr><td colspan="2" style="font-size:11px; color:var(--muted)">Year-over-year:</td>${changeRow}<td colspan="3"></td></tr>
-  `;
-
-  document.getElementById('historyTable').innerHTML = `<thead>${hdr}</thead><tbody>${body}${totalsBody}</tbody>`;
-  document.getElementById('portfolioIncomeTable').innerHTML = '';
+  } finally { btnPrint.disabled = false; btnPrint.textContent = label; }
 }
+btnPrint.addEventListener("click", printReport);
 
-/* ============================================================
-   TAB SWITCHING
-   ============================================================ */
-function showTab(name, btn) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-bar button').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  if (btn) btn.classList.add('active');
-}
-
-/* ============================================================
-   INIT
-   ============================================================ */
-(function init() {
-  loadState();
-  if (!state.workerUrl && DEFAULT_WORKER_URL) state.workerUrl = DEFAULT_WORKER_URL;
-  const urlField = document.getElementById('workerUrl');
-  if (urlField) urlField.value = state.workerUrl || '';
-  updateWorkerStatus();
-  renderPortfolioSelect();
-  renderTickerBox();
-  updateMasthead();
-})();
+/* ---------- start ---------- */
+rebuild(); syncEditUI();
+if (window.innerWidth < 700) setZoom(80);
+const startHash = (location.hash||"").replace("#","");
+setSheet(["fp","hist","src"].includes(startHash) ? startHash : "fp");
+window.addEventListener("hashchange", ()=>{ const h=(location.hash||"").replace("#",""); if (["fp","hist","src"].includes(h) && h!==state.sheet) setSheet(h); });
 </script>
 </body>
 </html>
